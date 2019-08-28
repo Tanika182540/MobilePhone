@@ -6,13 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import android.R.attr.data
-import android.content.DialogInterface
-import android.graphics.Color
 import androidx.appcompat.app.AlertDialog
 import com.codemobiles.mymobilephone.ui.main.SectionsPagerAdapter
 
@@ -47,7 +41,8 @@ class MainActivity : AppCompatActivity() {
                 val selectedItem = array[which]
 
                 try {
-                    // todo
+                    sectionsPagerAdapter.mMobileListFragment.feedData(selectedItem)
+                    dialog.dismiss()
 
                 }catch (e:IllegalArgumentException){
                     // Catch the color string parse exception
@@ -65,4 +60,6 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
         }
     }
+
+
 }

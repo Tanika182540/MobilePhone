@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +23,6 @@ import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.widget.Toast
-import android.R.attr.data
 import com.codemobiles.mymobilephone.R
 
 
@@ -38,8 +37,12 @@ private const val ARG_PARAM2 = "param2"
  */
 class MobileListFragment : Fragment() {
 
+
     private var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private lateinit var mAdapter: CustomAdapter
+    private var selectedItem:String = "default"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,12 +59,15 @@ class MobileListFragment : Fragment() {
             //it.layoutManager = LinearLayoutManager(activity, LinearLayout.HORIZONTAL,false)
             //it.layoutManager = GridLayoutManager(activity,2)
         }
-        feedData()
+        feedData(selectedItem)
 
         return _view
     }
 
-    fun feedData() {
+    fun feedData(selectedItem: String) {
+
+        this.selectedItem = selectedItem
+
         val call = ApiInterface.getClient().getMobileDetail()
 
         //Check Request
@@ -78,6 +84,33 @@ class MobileListFragment : Fragment() {
                     mDataArray.clear()
                     mDataArray.addAll(response.body()!!)
                     Log.d("SCB_NETWORK",mDataArray.toString())
+
+
+                    when (selectedItem) {
+                        "Rating 5-1" ->{
+                            sortedList.clear()
+                            sortedList.addAll(mDataArray.sortedWith(compareBy({ it.rating })))
+
+
+                        }
+
+                        "Price low to high" -> {
+                            sortedList.clear()
+                            sortedList.addAll(mDataArray.sortedWith(compareBy({ it.price })))
+
+                        }
+                        "Price high to low" ->{
+                            sortedList.clear()
+                            sortedList.addAll( mDataArray.sortedByDescending { it.price })
+
+                        }
+                        else -> { // Note the block
+                            sortedList.addAll(mDataArray)
+
+                        }
+                    }
+
+
 
                     mAdapter.notifyDataSetChanged()
                 }
@@ -104,7 +137,11 @@ class MobileListFragment : Fragment() {
         override fun getItemCount(): Int = mDataArray.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mDataArray[position]
+            val item = sortedList[position]
+
+            var sortedList = mDataArray.sortedWith(compareBy({ it.rating }))
+            Log.d("SCB_NETWORK","Rating ======> " + sortedList[position].rating.toString())
+
 
             holder.titleTextView.text = item.name
             holder.subtitleTextView.text = item.description
@@ -112,8 +149,8 @@ class MobileListFragment : Fragment() {
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
             holder.favButton.setOnClickListener {
-                addToFavorite()
-                holder.favButton.setImageResource(R.drawable.ic_favorite_black_24dp)
+                addToFavorite(item)
+
             }
             holder.cardView.setOnClickListener {
                 gotoDetailPage(item)
@@ -124,11 +161,12 @@ class MobileListFragment : Fragment() {
 
     }
 
-    fun addToFavorite(){
-        Toast.makeText(
-            activity, "Hi! Nampetch",
-            Toast.LENGTH_LONG
-        ).show()
+    fun addToFavorite(item: MobileBean) {
+
+        val list: ArrayList<String> = ArrayList()
+        list.add(item.toString())
+
+        Log.d("SCB_NETWORK",list.toString())
 
     }
 
@@ -138,6 +176,7 @@ class MobileListFragment : Fragment() {
         intent.putExtra("brand",item.brand)
         intent.putExtra("description",item.description)
         intent.putExtra("image",item.thumbImageURL)
+        intent.putExtra("id",item.id)
         startActivity(intent)
     }
 
@@ -149,7 +188,13 @@ class MobileListFragment : Fragment() {
         val price: TextView = view.textViewPrice
         val rating: TextView = view.textViewRating
         val cardView : CardView = view.cardView
-        val favButton : ImageView = view.favButton
+        val favButton : ToggleButton = view.favButton
+
+        init {
+            favButton.text = null
+            favButton.textOff = null
+            favButton.textOn = null
+        }
 
     }
 
