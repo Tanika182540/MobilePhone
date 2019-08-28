@@ -20,16 +20,19 @@ private val TAB_TITLES = arrayOf(
 class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     lateinit var mMobileListFragment: MobileListFragment
+    lateinit var mFavoriteFragment: FavoriteFragment
     override fun getItem(position: Int): Fragment {
 
         return when(position){
             //pass params of intent to fragment
             0 -> {
                 mMobileListFragment = MobileListFragment()
-
                 mMobileListFragment
             }
-            else -> FavoriteFragment()
+            else -> {
+                mFavoriteFragment = FavoriteFragment()
+                mFavoriteFragment
+            }
         }
 
     }

@@ -1,6 +1,8 @@
 package com.codemobiles.mymobilephone
 
 import android.os.Bundle
+import android.util.Log
+import android.view.SurfaceControl
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
         val fab: FloatingActionButton = findViewById(R.id.fab)
+
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

@@ -2,11 +2,14 @@ package com.codemobiles.mobilephone
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.codemobiles.mymobilephone.R
+import android.view.SurfaceControl.Transaction
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,7 +28,9 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        val _view:View = inflater.inflate(com.codemobiles.mymobilephone.R.layout.fragment_favorite, container, false)
+
+        return _view
     }
 
 

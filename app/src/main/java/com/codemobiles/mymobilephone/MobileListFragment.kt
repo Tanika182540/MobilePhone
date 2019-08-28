@@ -23,7 +23,9 @@ import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.codemobiles.mymobilephone.R
+import android.R
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,6 +42,7 @@ class MobileListFragment : Fragment() {
 
     private var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    val favList: ArrayList<String> = ArrayList()
     private lateinit var mAdapter: CustomAdapter
     private var selectedItem:String = "default"
 
@@ -48,7 +51,7 @@ class MobileListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val _view :View = inflater.inflate(R.layout.fragment_mobile_list, container, false)
+        val _view :View = inflater.inflate(com.codemobiles.mymobilephone.R.layout.fragment_mobile_list, container, false)
 
         mAdapter = CustomAdapter(context!!)
         _view.recyclerView.let {
@@ -127,7 +130,7 @@ class MobileListFragment : Fragment() {
 
             return CustomHolder(
                 LayoutInflater.from(parent.context).inflate(
-                    R.layout.custom_list,
+                    com.codemobiles.mymobilephone.R.layout.custom_list,
                     parent,
                     false
                 )
@@ -148,25 +151,33 @@ class MobileListFragment : Fragment() {
             holder.price.text = "Price : $ " + item.price
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
-            holder.favButton.setOnClickListener {
-                addToFavorite(item)
+            holder.favButton.setOnCheckedChangeListener { button, isChecked ->
 
+                if (isChecked){
+                    addToFavorite(item,position)
+                }else{
+                    removeFavorite(item,position)
+                }
             }
             holder.cardView.setOnClickListener {
                 gotoDetailPage(item)
             }
 
-
         }
 
     }
 
-    fun addToFavorite(item: MobileBean) {
+    fun removeFavorite(item: MobileBean, position: Int) {
 
-        val list: ArrayList<String> = ArrayList()
-        list.add(item.toString())
+        favList.remove(item.toString())
+        Log.d("SCB_NETWORK",favList.toString())
 
-        Log.d("SCB_NETWORK",list.toString())
+    }
+
+    fun addToFavorite(item: MobileBean, position: Int) {
+
+        favList.add(item.toString())
+        Log.d("SCB_NETWORK",favList.toString())
 
     }
 
