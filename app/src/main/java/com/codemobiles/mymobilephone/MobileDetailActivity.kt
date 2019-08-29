@@ -51,19 +51,19 @@ class MobileDetailActivity : AppCompatActivity() {
             val call = ApiInterface.getClient().getMobileImage(id)
 
             //Check Request
-            Log.d("SCB_NETWORK " , call.request().url().toString())
+            //Log.d("SCB_NETWORK " , call.request().url().toString())
 
             //change <YoutubeResponse>
             call.enqueue(object : Callback<List<MobileImage>> {
                 override fun onFailure(call: Call<List<MobileImage>>, t: Throwable) {
-                    Log.d("SCB_NETWORK " , t.message.toString())
+                    //Log.d("SCB_NETWORK " , t.message.toString())
                 }
 
                 override fun onResponse(call: Call<List<MobileImage>>, response: Response<List<MobileImage>>) {
                     if(response.isSuccessful){
                         mDataArray.clear()
                         mDataArray.addAll(response.body()!!)
-                        Log.d("SCB_NETWORK",mDataArray.toString())
+                        //Log.d("SCB_NETWORK",mDataArray.toString())
 
 
                         var imageList = arrayListOf(
@@ -84,7 +84,7 @@ class MobileDetailActivity : AppCompatActivity() {
 
 
                         }
-                        Log.d("SCB_NETWORK",imageList.toString())
+                        //Log.d("SCB_NETWORK",imageList.toString())
 
                         var imageUrls = arrayListOf(imageList)
                         imageSlider = findViewById(R.id.image_slider)

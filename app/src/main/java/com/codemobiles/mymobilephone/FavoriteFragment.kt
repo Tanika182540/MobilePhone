@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -58,7 +59,9 @@ class FavoriteFragment : Fragment() {
 
         }
 
-
+        _view.swipeRefresh.setOnRefreshListener {
+            feedData(selectedItem)
+        }
 
         feedData(selectedItem)
 
@@ -78,40 +81,17 @@ class FavoriteFragment : Fragment() {
                     favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
                     sortedList.clear()
                     sortedList.addAll(favList)
-                    mAdapter.notifyDataSetChanged()
+                     mAdapter.notifyDataSetChanged()
+                    Log.d("sortFragment",sortedList.toString())
 
                 }
             },
             IntentFilter(RECEIVED_NEW_MESSAGE)
         )
-
-        when (selectedItem) {
-            "Rating 5-1" ->{
-                sortedList.clear()
-                sortedList.addAll(favList.sortedWith(compareBy({ it.rating })))
-                Log.d("MyFilter" , selectedItem)
-
-            }
-
-            "Price low to high" -> {
-                sortedList.clear()
-                sortedList.addAll(favList.sortedWith(compareBy({ it.price })))
-                Log.d("MyFilter" , selectedItem)
-
-            }
-            "Price high to low" ->{
-                sortedList.clear()
-                sortedList.addAll( favList.sortedByDescending { it.price })
-                Log.d("MyFilter" , selectedItem)
-
-            }
-            else -> { // Note the block
-                sortedList.clear()
-                sortedList.addAll(favList)
-                Log.d("MyFilter" , selectedItem)
-
-            }
-        }
+        Handler().postDelayed({
+            //todo
+            view?.swipeRefresh?.isRefreshing = false
+        },3000)
 
         mAdapter.notifyDataSetChanged()
     }
@@ -126,7 +106,11 @@ class FavoriteFragment : Fragment() {
 
         override fun onItemDismiss(position: Int) {
             androidList?.removeAt(position)
-            notifyItemRemoved(position)
+            sortedList.removeAt(position)
+            sendBoardcastUpdateList(sortedList)
+            Log.d("delete", sortedList.toString())
+//            notifyItemRemoved(position)
+            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
@@ -163,6 +147,13 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    private fun sendBoardcastUpdateList(sortedList: ArrayList<MobileBean>) {
+        Intent(RECEIVED_UPDATE).let {
+            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, sortedList)
+            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+            Log.d("sortList",sortedList.toString())
+        }
+    }
 
 
     inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) : ItemTouchHelper.Callback() {
@@ -186,8 +177,6 @@ class FavoriteFragment : Fragment() {
                 listener.onItemDismiss(viewHolder.adapterPosition)
             }
         }
-
-
 
     }
 

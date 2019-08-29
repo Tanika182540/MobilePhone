@@ -1,9 +1,12 @@
 package com.codemobiles.mobilephone
 
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,13 +29,17 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.codemobiles.mymobilephone.*
+import kotlinx.android.synthetic.main.fragment_favorite.view.*
+import kotlinx.android.synthetic.main.fragment_mobile_list.view.swipeRefresh
 
 
 class MobileListFragment : Fragment() {
 
 
     private var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private var sortedUpdateList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private lateinit var mAdapter: CustomAdapter
     private var selectedItem:String = "default"
@@ -52,65 +60,57 @@ class MobileListFragment : Fragment() {
             //it.layoutManager = LinearLayoutManager(activity, LinearLayout.HORIZONTAL,false)
             //it.layoutManager = GridLayoutManager(activity,2)
         }
-        feedData(selectedItem)
+        //feedData(selectedItem)
+
+        recieveBroadcast()
+
+        _view.swipeRefresh.setOnRefreshListener {
+            recieveBroadcast()
+        }
+
 
         return _view
     }
 
-    fun feedData(selectedItem: String) {
+    private fun recieveBroadcast() {
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            object : BroadcastReceiver(){
+                override fun onReceive(context: Context, intent: Intent) {
 
-        this.selectedItem = selectedItem
-
-        val call = ApiInterface.getClient().getMobileDetail()
-
-        //Check Request
-        Log.d("SCB_NETWORK " , call.request().url().toString())
-
-        //change <YoutubeResponse>
-        call.enqueue(object : Callback<List<MobileBean>> {
-            override fun onFailure(call: Call<List<MobileBean>>, t: Throwable) {
-                Log.d("SCB_NETWORK " , t.message.toString())
-            }
-
-            override fun onResponse(call: Call<List<MobileBean>>, response: Response<List<MobileBean>>) {
-                if(response.isSuccessful){
+                    sortedList.clear()
+                    sortedList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
                     mDataArray.clear()
-                    mDataArray.addAll(response.body()!!)
-                    Log.d("SCB_NETWORK",mDataArray.toString())
-
-
-                    when (selectedItem) {
-                        "Rating 5-1" ->{
-                            sortedList.clear()
-                            sortedList.addAll(mDataArray.sortedWith(compareBy({ it.rating })))
-
-
-                        }
-
-                        "Price low to high" -> {
-                            sortedList.clear()
-                            sortedList.addAll(mDataArray.sortedWith(compareBy({ it.price })))
-
-                        }
-                        "Price high to low" ->{
-                            sortedList.clear()
-                            sortedList.addAll( mDataArray.sortedByDescending { it.price })
-
-                        }
-                        else -> { // Note the block
-                            sortedList.clear()
-                            sortedList.addAll(mDataArray)
-
-                        }
-                    }
-
+                    mDataArray.addAll(sortedList)
+                    Log.d("sortList",sortedList.toString())
                     mAdapter.notifyDataSetChanged()
+
                 }
+            },
+            IntentFilter(RECEIVED_TOKEN)
+        )
 
-            }
+        Handler().postDelayed({
+            //todo
+            view?.swipeRefresh?.isRefreshing = false
+        },3000)
+    }
 
+    private fun recieveUpdateBroadcast(){
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            object : BroadcastReceiver(){
+                override fun onReceive(context: Context, intent: Intent) {
 
-        })
+                    sortedUpdateList.clear()
+                    sortedUpdateList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
+                    mDataArrayUpdate.clear()
+                    mDataArrayUpdate.addAll(sortedUpdateList)
+                    Log.d("updateList",sortedUpdateList.toString())
+                    mAdapter.notifyDataSetChanged()
+
+                }
+            },
+            IntentFilter(RECEIVED_UPDATE)
+        )
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
@@ -129,13 +129,22 @@ class MobileListFragment : Fragment() {
         override fun getItemCount(): Int = mDataArray.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = sortedList[position]
+            val item = mDataArray[position]
 
             holder.titleTextView.text = item.name
             holder.subtitleTextView.text = item.description
             holder.price.text = "Price : $ " + item.price
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
+
+            holder.favButton.isChecked = false
+
+            for (i in 0 until mDataArrayUpdate.size){
+                if(item.name.contentEquals(mDataArrayUpdate[i].name)){
+                    holder.favButton.isChecked = true
+                }
+            }
+
             holder.favButton.setOnCheckedChangeListener { button, isChecked ->
 
                 if (isChecked){
@@ -172,6 +181,7 @@ class MobileListFragment : Fragment() {
             it.putParcelableArrayListExtra(RECEIVED_MESSAGE, content)
             LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
             Log.d("FavList",content.toString())
+            recieveUpdateBroadcast()
         }
 
     }
@@ -205,10 +215,6 @@ class MobileListFragment : Fragment() {
         }
 
     }
-
-
-
-
 }
 
 
