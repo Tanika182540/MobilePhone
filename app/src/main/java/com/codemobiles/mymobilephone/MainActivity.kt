@@ -23,14 +23,6 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-
-
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
 
         sortButton.setOnClickListener {
             lateinit var dialog:AlertDialog
@@ -46,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
                 try {
                     sectionsPagerAdapter.mMobileListFragment.feedData(selectedItem)
+                    sectionsPagerAdapter.mFavoriteFragment.feedData(selectedItem)
                     dialog.dismiss()
 
                 }catch (e:IllegalArgumentException){

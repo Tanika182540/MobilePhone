@@ -23,26 +23,16 @@ import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.R
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.codemobiles.mymobilephone.*
 
 
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class MobileListFragment : Fragment() {
 
 
     private var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    val favList: ArrayList<String> = ArrayList()
+    val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     private lateinit var mAdapter: CustomAdapter
     private var selectedItem:String = "default"
 
@@ -51,7 +41,7 @@ class MobileListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val _view :View = inflater.inflate(com.codemobiles.mymobilephone.R.layout.fragment_mobile_list, container, false)
+        val _view :View = inflater.inflate(R.layout.fragment_mobile_list, container, false)
 
         mAdapter = CustomAdapter(context!!)
         _view.recyclerView.let {
@@ -108,12 +98,11 @@ class MobileListFragment : Fragment() {
 
                         }
                         else -> { // Note the block
+                            sortedList.clear()
                             sortedList.addAll(mDataArray)
 
                         }
                     }
-
-
 
                     mAdapter.notifyDataSetChanged()
                 }
@@ -130,7 +119,7 @@ class MobileListFragment : Fragment() {
 
             return CustomHolder(
                 LayoutInflater.from(parent.context).inflate(
-                    com.codemobiles.mymobilephone.R.layout.custom_list,
+                    R.layout.custom_list,
                     parent,
                     false
                 )
@@ -141,10 +130,6 @@ class MobileListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = sortedList[position]
-
-            var sortedList = mDataArray.sortedWith(compareBy({ it.rating }))
-            Log.d("SCB_NETWORK","Rating ======> " + sortedList[position].rating.toString())
-
 
             holder.titleTextView.text = item.name
             holder.subtitleTextView.text = item.description
@@ -169,15 +154,25 @@ class MobileListFragment : Fragment() {
 
     fun removeFavorite(item: MobileBean, position: Int) {
 
-        favList.remove(item.toString())
+        favList.remove(item)
         Log.d("SCB_NETWORK",favList.toString())
-
+        sendBroadcastMessage(favList)
     }
 
     fun addToFavorite(item: MobileBean, position: Int) {
 
-        favList.add(item.toString())
+        favList.add(item)
         Log.d("SCB_NETWORK",favList.toString())
+        sendBroadcastMessage(favList)
+
+    }
+
+    fun sendBroadcastMessage(content: ArrayList<MobileBean>) {
+        Intent(RECEIVED_NEW_MESSAGE).let {
+            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, content)
+            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+            Log.d("FavList",content.toString())
+        }
 
     }
 
@@ -188,6 +183,8 @@ class MobileListFragment : Fragment() {
         intent.putExtra("description",item.description)
         intent.putExtra("image",item.thumbImageURL)
         intent.putExtra("id",item.id)
+        intent.putExtra("rating",item.rating)
+        intent.putExtra("price",item.price)
         startActivity(intent)
     }
 

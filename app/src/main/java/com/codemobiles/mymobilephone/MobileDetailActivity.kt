@@ -1,10 +1,16 @@
 package com.codemobiles.mobilephone
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.codemobiles.mobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.R
+import com.codemobiles.mymobilephone.RECEIVED_PLAYERID
+import com.codemobiles.mymobilephone.RECEIVED_TOKEN
 import com.codemobiles.mymobilephone.models.MobileImage
 import com.ouattararomuald.slider.ImageSlider
 import com.ouattararomuald.slider.SliderAdapter
@@ -26,16 +32,20 @@ class MobileDetailActivity : AppCompatActivity() {
         val name = intent.getStringExtra("name")
         val brand = intent.getStringExtra("brand")
         val description = intent.getStringExtra("description")
-        val image = intent.getStringExtra("image")
         val id = intent.getIntExtra("id", 0)
+        val price = intent.getDoubleExtra("price",0.0)
+        val rating = intent.getDoubleExtra("rating",0.0)
         modeText.text = name
         brandText.text = brand
         detailText.text = description
-
+        textViewRating.text = "rating : " + rating.toString()
+        textViewPrice.text = "price : " + price.toString()
 
         feedImage(id)
 
     }
+
+
 
     fun feedImage(id: Int) {
             val call = ApiInterface.getClient().getMobileImage(id)
