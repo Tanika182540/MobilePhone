@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.*
+import com.codemobiles.mymobilephone.MainActivity.Companion.favList
 import kotlinx.android.synthetic.main.custom_list.view.mobileImg
 import kotlinx.android.synthetic.main.custom_list.view.textViewRating
 import kotlinx.android.synthetic.main.custom_list.view.textViewTitle
@@ -81,7 +82,7 @@ class FavoriteFragment : Fragment() {
                     favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
                     sortedList.clear()
                     sortedList.addAll(favList)
-                     mAdapter.notifyDataSetChanged()
+                    mAdapter.notifyDataSetChanged()
                     Log.d("sortFragment",sortedList.toString())
 
                 }
@@ -135,7 +136,7 @@ class FavoriteFragment : Fragment() {
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
 
 
-    }
+        }
 
         inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
 
