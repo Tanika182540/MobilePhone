@@ -8,19 +8,12 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.codemobiles.mobilephone.MobileListFragment
-import com.codemobiles.mobilephone.MobileListFragment.Companion.mAdapter
+//import com.codemobiles.mobilephone.MobileListFragment.Companion.mAdapter
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mobilephone.network.ApiInterface
-import com.codemobiles.mymobilephone.MainActivity.Companion.favList
 import com.codemobiles.mymobilephone.MainActivity.Companion.mRecieveArray
-import com.codemobiles.mymobilephone.MainActivity.Companion.thisFavList
 import com.codemobiles.mymobilephone.RECEIVED_MESSAGE
 import com.codemobiles.mymobilephone.RECEIVED_MESSAGE2
-import com.codemobiles.mymobilephone.RECEIVED_NEW_MESSAGE
 import com.codemobiles.mymobilephone.RECEIVED_TOKEN
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.IllegalArgumentException
 
 class MainActivityPresenter(_view: MainActivityInterface.MainActivityView, context: Context) : MainActivityInterface.MainActivityPresenter {
@@ -36,33 +29,33 @@ class MainActivityPresenter(_view: MainActivityInterface.MainActivityView, conte
         var dataList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     }
 
-    override fun feedData() {
-        this.selectedItem = selectedItem
-
-        val call = ApiInterface.getClient().getMobileDetail()
-
-        //Check Request
-        //Log.d("SCB_NETWORK " , call.request().url().toString())
-
-        //change <YoutubeResponse>
-        call.enqueue(object : Callback<List<MobileBean>> {
-            override fun onFailure(call: Call<List<MobileBean>>, t: Throwable) {
-                //Log.d("SCB_NETWORK " , t.message.toString())
-            }
-
-            override fun onResponse(call: Call<List<MobileBean>>, response: Response<List<MobileBean>>) {
-                if(response.isSuccessful){
-                    mDataArray.clear()
-                    mDataArray.addAll(response.body()!!)
-                    Log.d("SCB_NETWORK",mDataArray.toString())
-
-                    sendBroadcastToMain(mDataArray)
-                    mAdapter.notifyDataSetChanged()
-
-                }
-            }
-        })
-    }
+//    override fun feedData() {
+//        this.selectedItem = selectedItem
+//
+//        val call = ApiInterface.getClient().getMobileDetail()
+//
+//        //Check Request
+//        //Log.d("SCB_NETWORK " , call.request().url().toString())
+//
+//        //change <YoutubeResponse>
+//        call.enqueue(object : Callback<List<MobileBean>> {
+//            override fun onFailure(call: Call<List<MobileBean>>, t: Throwable) {
+//                //Log.d("SCB_NETWORK " , t.message.toString())
+//            }
+//
+//            override fun onResponse(call: Call<List<MobileBean>>, response: Response<List<MobileBean>>) {
+//                if(response.isSuccessful){
+//                    mDataArray.clear()
+//                    mDataArray.addAll(response.body()!!)
+//                    Log.d("SCB_NETWORK",mDataArray.toString())
+//
+//                    sendBroadcastToMain(mDataArray)
+//                    mAdapter.notifyDataSetChanged()
+//
+//                }
+//            }
+//        })
+//    }
 
     private fun sendBroadcastToMain(mDataArray: ArrayList<MobileBean>) {
         Intent(RECEIVED_MESSAGE2).let {
@@ -92,6 +85,7 @@ class MainActivityPresenter(_view: MainActivityInterface.MainActivityView, conte
 
     override fun selectedSortItem(selectedItem: String,mMobileArray: ArrayList<MobileBean>) {
 
+        this.selectedItem = selectedItem
 
         when (selectedItem) {
             "Rating 5-1" ->{
@@ -146,11 +140,12 @@ class MainActivityPresenter(_view: MainActivityInterface.MainActivityView, conte
 
             try {
 
-                selectedSortItem(selectedItem,mRecieveArray)
+                selectedSortItem(selectedItem,mDataArray)
+                //mMobileListFragment.mMobileListPresenter.selectedSortItem(selectedItem)
                 dialog.dismiss()
 
             } catch (e: IllegalArgumentException) {
-
+                Log.d("errorCatch",e.toString())
             }
             dialog.dismiss()
         }
@@ -167,23 +162,23 @@ class MainActivityPresenter(_view: MainActivityInterface.MainActivityView, conte
 
     }
 
-    override fun recieveFavoriteData(selectedItem: String) {
-        this.selectedItem = selectedItem
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(
-            object : BroadcastReceiver(){
-                override fun onReceive(context: Context, intent: Intent) {
-
-                    favList.clear()
-                    favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-                    thisFavList.clear()
-                    thisFavList.addAll(favList)
-                    //Log.d("MainFav",thisFavList.toString())
-
-                }
-            },
-            IntentFilter(RECEIVED_NEW_MESSAGE)
-        )
-    }
+//    override fun recieveFavoriteData(selectedItem: String) {
+//        this.selectedItem = selectedItem
+//
+//        LocalBroadcastManager.getInstance(context).registerReceiver(
+//            object : BroadcastReceiver(){
+//                override fun onReceive(context: Context, intent: Intent) {
+//
+//                    favList.clear()
+//                    favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
+//                    thisFavList.clear()
+//                    thisFavList.addAll(favList)
+//                    //Log.d("MainFav",thisFavList.toString())
+//
+//                }
+//            },
+//            IntentFilter(RECEIVED_NEW_MESSAGE)
+//        )
+//    }
 
 }

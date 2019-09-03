@@ -11,10 +11,10 @@ interface MainActivityInterface {
 
     interface MainActivityPresenter{
         fun showSortDialog()
-        fun feedData()
+//        fun feedData()
         fun selectedSortItem(selectedItem: String,mDataArray: ArrayList<MobileBean>)
         fun sendBroadcastMessage(content: ArrayList<MobileBean>)
         fun recieveData()
-        fun recieveFavoriteData(selectedItem: String)
+//        fun recieveFavoriteData(selectedItem: String)
     }
 }

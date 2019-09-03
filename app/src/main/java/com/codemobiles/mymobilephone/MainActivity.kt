@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.codemobiles.mobilephone.MobileListFragment.Companion.mAdapter
+//import com.codemobiles.mobilephone.MobileListFragment.Companion.mAdapter
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.presenter.MainActivityInterface
 import com.codemobiles.mymobilephone.presenter.MainActivityPresenter
@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() ,MainActivityInterface.MainActivityView
     companion object{
 
         var mRecieveArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
         var thisFavList: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     }
@@ -35,28 +34,43 @@ class MainActivity : AppCompatActivity() ,MainActivityInterface.MainActivityView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
+//        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+//            override fun onPageScrollStateChanged(state: Int) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//
+//            }
+//
+//        })
+
 
         mMainActivityPresenter = MainActivityPresenter(this,this@MainActivity)
-        mMainActivityPresenter.feedData()
-        mMainActivityPresenter.recieveData()
-        mMainActivityPresenter.selectedSortItem(selectedItem, sortedArrayList)
-        mMainActivityPresenter.sendBroadcastMessage(mRecieveArray)
-
+//        mMainActivityPresenter.feedData()
+//        mMainActivityPresenter.recieveData()
+//        mMainActivityPresenter.selectedSortItem(selectedItem, sortedArrayList)
+//        mMainActivityPresenter.sendBroadcastMessage(mRecieveArray)
 
         sortButton.setOnClickListener {
             mMainActivityPresenter.showSortDialog()
         }
 
-            mMainActivityPresenter.recieveFavoriteData(selectedItem)
+            //mMainActivityPresenter.recieveFavoriteData(selectedItem)
 
 
-        Log.d("favFromMain",favList.toString())
+            //Log.d("favFromMain",favList.toString())
     }
 
 
