@@ -14,42 +14,50 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mobilephone.network.ApiInterface
 import kotlinx.android.synthetic.main.custom_list.view.*
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.codemobiles.mobilephone.FavoriteFragment.Companion.mDataArrayUpdate
+import com.codemobiles.mobilephone.FavoriteFragment.Companion.mFavListPresenter
 import com.codemobiles.mymobilephone.*
-import kotlinx.android.synthetic.main.fragment_favorite.view.*
+import com.codemobiles.mymobilephone.MainActivity.Companion.selectedItem
+import com.codemobiles.mymobilephone.presenter.MobileListInterface
+import com.codemobiles.mymobilephone.presenter.MobileListPresenter
+import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.mMobileArray
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.swipeRefresh
 
 
-class MobileListFragment : Fragment() {
+class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
 
-    private var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    private var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    private var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
+
     private var sortedUpdateList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    private lateinit var mAdapter: CustomAdapter
-    private var selectedItem: String = "default"
+    lateinit var _view: View
+    //private var selectedItem: String = "default"
 
+    companion object{
+        lateinit var mMobileListPresenter: MobileListInterface.MobileListPresenter
+        var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+        lateinit var mAdapter: CustomAdapter
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val _view: View = inflater.inflate(R.layout.fragment_mobile_list, container, false)
+        _view = inflater.inflate(R.layout.fragment_mobile_list, container, false)
 
+        return _view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mMobileListPresenter = MobileListPresenter(this, this@MobileListFragment, context!!)
         mAdapter = CustomAdapter(context!!)
         _view.recyclerView.let {
             it.adapter = mAdapter
@@ -59,58 +67,38 @@ class MobileListFragment : Fragment() {
             //it.layoutManager = LinearLayoutManager(activity, LinearLayout.HORIZONTAL,false)
             //it.layoutManager = GridLayoutManager(activity,2)
         }
-        //feedData(selectedItem)
 
-        recieveBroadcast()
+        mMobileListPresenter.feedData(selectedItem)
+        // mAdapter.notifyDataSetChanged()
 
-        _view.swipeRefresh.setOnRefreshListener {
-            recieveBroadcast()
-        }
+//        mMobileListPresenter.recieveBroadcast(_view)
+//
+//        _view.swipeRefresh.setOnRefreshListener {
+//            mMobileListPresenter.recieveBroadcast(_view)
+//        }
 
-
-        return _view
+        mMobileListPresenter.setupDatabase()
+        mMobileListPresenter.setUpWorkerThread()
     }
 
-    private fun recieveBroadcast() {
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-            object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
 
-                    sortedList.clear()
-                    sortedList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-                    mDataArray.clear()
-                    mDataArray.addAll(sortedList)
-                    Log.d("sortList", sortedList.toString())
-                    mAdapter.notifyDataSetChanged()
-
-                }
-            },
-            IntentFilter(RECEIVED_TOKEN)
-        )
-
-        Handler().postDelayed({
-            //todo
-            view?.swipeRefresh?.isRefreshing = false
-        }, 3000)
-    }
-
-    private fun recieveUpdateBroadcast() {
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-            object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-
-                    sortedUpdateList.clear()
-                    sortedUpdateList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-                    mDataArrayUpdate.clear()
-                    mDataArrayUpdate.addAll(sortedUpdateList)
-                    Log.d("updateList", sortedUpdateList.toString())
-                    mAdapter.notifyDataSetChanged()
-
-                }
-            },
-            IntentFilter(RECEIVED_UPDATE)
-        )
-    }
+//    private fun recieveUpdateBroadcast() {
+//        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+//            object : BroadcastReceiver() {
+//                override fun onReceive(context: Context, intent: Intent) {
+//
+//                    sortedUpdateList.clear()
+//                    sortedUpdateList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
+//                    mDataArrayUpdate.clear()
+//                    mDataArrayUpdate.addAll(sortedUpdateList)
+//                    Log.d("updateList", sortedUpdateList.toString())
+//                    mAdapter.notifyDataSetChanged()
+//
+//                }
+//            },
+//            IntentFilter(RECEIVED_UPDATE)
+//        )
+//    }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
 
@@ -125,10 +113,10 @@ class MobileListFragment : Fragment() {
             )
         }
 
-        override fun getItemCount(): Int = mDataArray.size
+        override fun getItemCount(): Int = mMobileArray.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mDataArray[position]
+            val item = mMobileArray[position]
 
             holder.titleTextView.text = item.name
             holder.subtitleTextView.text = item.description
@@ -138,63 +126,55 @@ class MobileListFragment : Fragment() {
 
             holder.favButton.isChecked = false
 
-            for (i in 0 until mDataArrayUpdate.size) {
-                if (item.name.contentEquals(mDataArrayUpdate[i].name)) {
+            Log.d("deletearray",mDataArrayUpdate.toString())
+//            mMobileListPresenter.updateFavList(mDataArrayUpdate,item,holder)
+            for (i in 0 until sortedUpdateList.size) {
+                if (item.name.contentEquals(sortedUpdateList[i].name)) {
                     holder.favButton.isChecked = true
+                    MobileListFragment.mAdapter.notifyDataSetChanged()
+                    Log.d("deletelist", sortedUpdateList.toString())
                 }
             }
+
 
             holder.favButton.setOnCheckedChangeListener { button, isChecked ->
 
                 if (isChecked) {
-                    addToFavorite(item, position)
+                    mMobileListPresenter.addToFavorite(item, position)
                 } else {
-                    removeFavorite(item, position)
+                    mMobileListPresenter.removeFavorite(item, position)
                 }
             }
 
             holder.cardView.setOnClickListener {
-                gotoDetailPage(item)
+                mMobileListPresenter.gotoDetailPage(item)
             }
         }
     }
 
-    fun removeFavorite(item: MobileBean, position: Int) {
+//    fun removeFavorite(item: MobileBean, position: Int) {
+//
+//        favList.remove(item)
+//        Log.d("SCB_NETWORK", favList.toString())
+//        sendBroadcastMessage(favList)
+//    }
 
-        favList.remove(item)
-        Log.d("SCB_NETWORK", favList.toString())
-        sendBroadcastMessage(favList)
-    }
+//    fun addToFavorite(item: MobileBean, position: Int) {
+//
+//        favList.add(item)
+//        Log.d("SCB_NETWORK", favList.toString())
+//        sendBroadcastMessage(favList)
+//
+//    }
 
-    fun addToFavorite(item: MobileBean, position: Int) {
-
-        favList.add(item)
-        Log.d("SCB_NETWORK", favList.toString())
-        sendBroadcastMessage(favList)
-
-    }
-
-    fun sendBroadcastMessage(content: ArrayList<MobileBean>) {
-        Intent(RECEIVED_NEW_MESSAGE).let {
-            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, content)
-            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
-            Log.d("FavList", content.toString())
-            recieveUpdateBroadcast()
-        }
-    }
-
-    fun gotoDetailPage(item: MobileBean) {
-        val intent = Intent(getActivity(), MobileDetailActivity::class.java)
-
-        intent.putExtra("name", item.name)
-        intent.putExtra("brand", item.brand)
-        intent.putExtra("description", item.description)
-        intent.putExtra("image", item.thumbImageURL)
-        intent.putExtra("id", item.id)
-        intent.putExtra("rating", item.rating)
-        intent.putExtra("price", item.price)
-        startActivity(intent)
-    }
+//    fun sendBroadcastMessage(content: ArrayList<MobileBean>) {
+//        Intent(RECEIVED_NEW_MESSAGE).let {
+//            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, content)
+//            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+//            Log.d("FavList", content.toString())
+//            recieveUpdateBroadcast()
+//        }
+//    }
 
     inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
 

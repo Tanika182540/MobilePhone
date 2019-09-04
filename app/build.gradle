@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.1"
@@ -45,6 +47,9 @@ dependencies {
     implementation 'com.ouattararomuald:slider-glide:2.0.0'
     implementation 'com.ouattararomuald:slider-picasso:2.0.0'
 
+    // Room components
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
 
 
 }
