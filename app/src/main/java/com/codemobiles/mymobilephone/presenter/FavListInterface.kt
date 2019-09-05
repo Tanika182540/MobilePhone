@@ -21,7 +21,7 @@ interface FavListInterface {
         fun sortData(selectedItem: String)
         fun setUpWorkerThread()
         fun setupDatabase()
-
+        fun deleteFavorite(id: Int)
 
     }
 }

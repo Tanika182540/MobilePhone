@@ -9,15 +9,17 @@ interface MobileDAO {
     fun queryMobile(): MobileEntity
 
 
-    @Insert
-    fun addFavorite(mobileEntity: MobileEntity)
 
-//    @Insert
-//    fun insertMobileList(mobileEntity:MobileEntity)
-//
-//    @Update
-//    fun updataFavorite(mobileEntity: MobileEntity)
-//
-//    @Delete
-//    fun deleteFavorite(mobileEntity: MobileEntity)
+//    @Transaction
+//    fun setMobileList(mobileEntity: MobileEntity){
+//        clearMobileList()
+//        insertMobileList(mobileEntity)
+//    }
+
+    @Insert
+    fun insertMobileList(mobileEntity:MobileEntity)
+
+
+//    @Query("DELETE FROM mobilePhone")
+//    fun clearMobileList()
 }

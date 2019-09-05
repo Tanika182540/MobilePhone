@@ -3,6 +3,7 @@ package com.codemobiles.mymobilephone.presenter
 import android.content.Context
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import com.codemobiles.mobilephone.FavoriteFragment
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
@@ -16,21 +17,18 @@ class FavListPresenter(
     context: Context,
     favoriteFragment: FavoriteFragment
 ) : FavListInterface.FavListPresenter {
+    override fun deleteFavorite(id: Int) {
+        val task = Runnable {
+            mDatabaseAdapter?.favoriteDAO()?.deleteFavorite(id)
+            Toast.makeText(context, "delete!" + id, Toast.LENGTH_SHORT).show()
+        }
+        mCMWorkerThread.postTask(task)
+    }
 
-    lateinit var mCMWorkerThread : CMWorkerThread
-    var mDatabaseAdapter : AppDatabase? = null
-    val context:Context = context
-
-
-//    override fun getFavDatabase() {
-//        val task = Runnable{
-//            mDataFavUpdate = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile() as ArrayList<MobileBean>
-//            Log.d("FavBean",mDataFavUpdate.toString())
-//        }
-//         mCMWorkerThread.postTask(task)
-//    }
-
-    private var selectedItem:String = "default"
+    lateinit var mCMWorkerThread: CMWorkerThread
+    var mDatabaseAdapter: AppDatabase? = null
+    val context: Context = context
+    private var selectedItem: String = "default"
     private var view: FavListInterface.FavListView = _view
 
     override fun updateFavList(
@@ -48,63 +46,61 @@ class FavListPresenter(
     }
 
     override fun feedData(selectedItem: String) {
-        val task = Runnable{
+        val task = Runnable {
 
-            var selectedList : List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            var selectedList: List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             view?.getFav(selectedList)
         }
         mCMWorkerThread.postTask(task)
 
-        Log.d("favList",sortedList.toString())
+        Log.d("favList", sortedList.toString())
         Handler().postDelayed({
             //todo
             view?.hideLoading()
-        },3000)
+        }, 3000)
 
     }
 
 
-    override fun sortData(selectedItem: String){
+    override fun sortData(selectedItem: String) {
 
+        val task = Runnable {
 
-
-        val task = Runnable{
-
-            var selectedList : List<FavoriteEntity>? = listOf()
+            var selectedList: List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             val checkId = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
 
-            Log.d("checkId",checkId.toString())
+            Log.d("checkId", checkId.toString())
 
-
-        when (selectedItem) {
-            "Rating 5-1" ->{
-                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortRating()
-                sortedList.sortByDescending { it.rating }
-                Log.d("filter1", selectedList.toString())
-            }
-
-            "Price low to high" -> {
-                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceL()
-                sortedList.sortBy { it.price }
-                Log.d("filter2", selectedList.toString())
-            }
-            "Price high to low" ->{
-                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceH()
-                sortedList.sortByDescending { it.price }
-                Log.d("filter3", selectedList.toString())
-            }
-            else -> { // Note the block
+            when (selectedItem) {
+                "Rating 5-1" -> {
+                    selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortRating()
+                    Toast.makeText(context, "Rating 5-1", Toast.LENGTH_SHORT).show()
+                    Log.d("filter1", selectedList.toString())
+                }
+                "Price low to high" -> {
+                    selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceL()
+                    Toast.makeText(context, "Price low to high", Toast.LENGTH_SHORT).show()
+                    Log.d("filter2", selectedList.toString())
+                }
+                "Price high to low" -> {
+                    selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceH()
+                    Toast.makeText(context, "Price high to low", Toast.LENGTH_SHORT).show()
+                    Log.d("filter3", selectedList.toString())
+                }
+                else -> { // Note the block
 //                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
-                sortedList.addAll(sortedList)
-
-                Log.d("filter4", selectedList.toString())
+                    Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show()
+//                Log.d("filter4", selectedList.toString())
+                }
             }
-        }
-            view?.getFav(selectedList)
-//        FavoriteFragment.mAdapter.notifyDataSetChanged()
-
+            view.getFav(selectedList)
         }
         mCMWorkerThread.postTask(task)
+
+        Handler().postDelayed({
+            //todo
+            view?.hideLoading()
+        }, 3000)
     }
 
     override fun setUpWorkerThread() {

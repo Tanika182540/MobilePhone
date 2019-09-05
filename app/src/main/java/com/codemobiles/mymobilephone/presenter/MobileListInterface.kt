@@ -1,12 +1,15 @@
 package com.codemobiles.mymobilephone.presenter
 
-import android.view.View
-import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.database.FavoriteEntity
 
 interface MobileListInterface {
     interface MobileListView {
 
+        fun checkFavoriteButton(selectedList: List<FavoriteEntity>?)
+        fun hideLoading()
+        fun showData()
+        fun getListMobile(mMobileArray: ArrayList<MobileBean>)
     }
 
     interface MobileListPresenter {
@@ -17,5 +20,8 @@ interface MobileListInterface {
         fun gotoDetailPage(item: MobileBean)
         fun setUpWorkerThread()
         fun setupDatabase()
+        fun addFavoriteButton()
+        fun loadDatabase()
+//        fun getAllMobile(mMobileEnitity:MobileEntity): MobileEntity?
     }
 }

@@ -7,6 +7,6 @@ interface MainInterface {
 
     interface MainPresenter {
 
-        fun showSortDialog()
+//        fun showSortDialog()
     }
 }

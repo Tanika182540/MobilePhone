@@ -1,12 +1,8 @@
 package com.codemobiles.mobilephone
 
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,30 +18,26 @@ import com.bumptech.glide.Glide
 import com.codemobiles.mobilephone.models.MobileBean
 import kotlinx.android.synthetic.main.custom_list.view.*
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.mDataArrayUpdate
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.mFavListPresenter
 import com.codemobiles.mymobilephone.*
-import com.codemobiles.mymobilephone.MainActivity.Companion.selectedItem
+import com.codemobiles.mymobilephone.database.FavoriteEntity
+import com.codemobiles.mymobilephone.database.MobileEntity
 import com.codemobiles.mymobilephone.presenter.MobileListInterface
 import com.codemobiles.mymobilephone.presenter.MobileListPresenter
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.mMobileArray
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.swipeRefresh
 
 
-class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
-
-
-    private var sortedUpdateList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    lateinit var _view: View
-    //private var selectedItem: String = "default"
-
-    companion object{
-        lateinit var mMobileListPresenter: MobileListInterface.MobileListPresenter
-        var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        lateinit var mAdapter: CustomAdapter
-
+class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortTypeListener {
+    override fun getListMobile(mMobileArray: ArrayList<MobileBean>) {
+        this.mMobileArray = mMobileArray
     }
+
+    lateinit var list: MobileEntity
+    lateinit var mAdapter: CustomAdapter
+    var checkFavButton: List<FavoriteEntity>? = listOf()
+    lateinit var mMobileListPresenter: MobileListInterface.MobileListPresenter
+    lateinit var _view: View
+    var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,6 +46,22 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
         _view = inflater.inflate(R.layout.fragment_mobile_list, container, false)
 
         return _view
+    }
+    override fun showData() {
+        mAdapter.notifyDataSetChanged()
+    }
+
+
+    override fun hideLoading() {
+        view?.swipeRefresh?.isRefreshing = false
+    }
+    override fun checkFavoriteButton(selectedList: List<FavoriteEntity>?) {
+        checkFavButton = selectedList
+        Log.d("favorite", checkFavButton.toString())
+    }
+
+    override fun updateSortType(sort: String) {
+        mMobileListPresenter.feedData(sort)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,41 +72,16 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
 
             //IMPORTANT ! ! ! ! ! !
             it.layoutManager = LinearLayoutManager(activity)
-            //it.layoutManager = LinearLayoutManager(activity, LinearLayout.HORIZONTAL,false)
-            //it.layoutManager = GridLayoutManager(activity,2)
         }
 
-        mMobileListPresenter.feedData(selectedItem)
-        // mAdapter.notifyDataSetChanged()
 
-//        mMobileListPresenter.recieveBroadcast(_view)
-//
-//        _view.swipeRefresh.setOnRefreshListener {
-//            mMobileListPresenter.recieveBroadcast(_view)
-//        }
-
-        mMobileListPresenter.setupDatabase()
+        _view.swipeRefresh.setOnRefreshListener {
+            mMobileListPresenter.feedData("default")
+        }
         mMobileListPresenter.setUpWorkerThread()
+        mMobileListPresenter.setupDatabase()
+        mMobileListPresenter.feedData("default")
     }
-
-
-//    private fun recieveUpdateBroadcast() {
-//        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-//            object : BroadcastReceiver() {
-//                override fun onReceive(context: Context, intent: Intent) {
-//
-//                    sortedUpdateList.clear()
-//                    sortedUpdateList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-//                    mDataArrayUpdate.clear()
-//                    mDataArrayUpdate.addAll(sortedUpdateList)
-//                    Log.d("updateList", sortedUpdateList.toString())
-//                    mAdapter.notifyDataSetChanged()
-//
-//                }
-//            },
-//            IntentFilter(RECEIVED_UPDATE)
-//        )
-//    }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
 
@@ -117,6 +100,15 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = mMobileArray[position]
+            var favItem = FavoriteEntity(
+                item.id,
+                item.description,
+                item.thumbImageURL,
+                item.name,
+                item.price,
+                item.brand,
+                item.rating
+            )
 
             holder.titleTextView.text = item.name
             holder.subtitleTextView.text = item.description
@@ -124,17 +116,9 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
 
-            holder.favButton.isChecked = false
+            holder.favButton.isChecked = checkFavButton!!.contains(favItem)
 
-            Log.d("deletearray",mDataArrayUpdate.toString())
-//            mMobileListPresenter.updateFavList(mDataArrayUpdate,item,holder)
-            for (i in 0 until sortedUpdateList.size) {
-                if (item.name.contentEquals(sortedUpdateList[i].name)) {
-                    holder.favButton.isChecked = true
-                    MobileListFragment.mAdapter.notifyDataSetChanged()
-                    Log.d("deletelist", sortedUpdateList.toString())
-                }
-            }
+            mMobileListPresenter.addFavoriteButton()
 
 
             holder.favButton.setOnCheckedChangeListener { button, isChecked ->
@@ -152,29 +136,6 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView {
         }
     }
 
-//    fun removeFavorite(item: MobileBean, position: Int) {
-//
-//        favList.remove(item)
-//        Log.d("SCB_NETWORK", favList.toString())
-//        sendBroadcastMessage(favList)
-//    }
-
-//    fun addToFavorite(item: MobileBean, position: Int) {
-//
-//        favList.add(item)
-//        Log.d("SCB_NETWORK", favList.toString())
-//        sendBroadcastMessage(favList)
-//
-//    }
-
-//    fun sendBroadcastMessage(content: ArrayList<MobileBean>) {
-//        Intent(RECEIVED_NEW_MESSAGE).let {
-//            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, content)
-//            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
-//            Log.d("FavList", content.toString())
-//            recieveUpdateBroadcast()
-//        }
-//    }
 
     inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
 

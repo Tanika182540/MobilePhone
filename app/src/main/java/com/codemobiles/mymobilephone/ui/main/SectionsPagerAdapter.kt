@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.codemobiles.mobilephone.FavoriteFragment
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mymobilephone.R
+import com.codemobiles.mymobilephone.SortTypeListener
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -17,21 +18,24 @@ private val TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: Context,val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    lateinit var mMobileListFragment: MobileListFragment
-    lateinit var mFavoriteFragment: FavoriteFragment
+    fun updateSort(sort: String) {
+        fm.fragments.forEach {
+            if (it is SortTypeListener) {
+                it.updateSortType(sort)
+            }
+        }
+    }
+
     override fun getItem(position: Int): Fragment {
-
         return when(position){
             //pass params of intent to fragment
             0 -> {
-                mMobileListFragment = MobileListFragment()
-                mMobileListFragment
+                MobileListFragment()
             }
             else -> {
-                mFavoriteFragment = FavoriteFragment()
-                mFavoriteFragment
+                FavoriteFragment()
             }
         }
 

@@ -1,12 +1,9 @@
 package com.codemobiles.mobilephone
 
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.EntityIterator
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,20 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.codemobiles.mobilephone.MobileListFragment.Companion.mMobileListPresenter
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.*
-import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.presenter.FavListInterface
 import com.codemobiles.mymobilephone.presenter.FavListPresenter
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.mMobileArray
 import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.sortedList
 import kotlinx.android.synthetic.main.custom_list.view.mobileImg
 import kotlinx.android.synthetic.main.custom_list.view.textViewRating
@@ -35,31 +27,39 @@ import kotlinx.android.synthetic.main.custom_list.view.textViewTitle
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.swipeRefresh
-import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
-    var a: List<FavoriteEntity> = listOf()
-    override fun getFav(selectedList: List<FavoriteEntity>?) {
-        a = selectedList!!
-        Log.d("listfav",selectedList.toString())
-//        mAdapter.notifyDataSetChanged()
+class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListener {
+
+    override fun updateSortType(sort: String) {
+
+        mFavListPresenter.sortData(sort)
     }
 
+    override fun getFav(selectedList: List<FavoriteEntity>?) {
+        activity?.runOnUiThread {
+            selectedList?.let {
+                mAdapter.setData(selectedList)
+                mAdapter.notifyDataSetChanged()
+            }
 
-    //var favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    private var selectedItem:String = "default"
+        }
 
-    companion object{
+        Log.d("listfav", selectedList.toString())
+    }
+
+    private var selectedItem: String = "default"
+
+    lateinit var mAdapter: CustomAdapter
+
+    companion object {
         val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        lateinit var mAdapter: CustomAdapter
         lateinit var mFavListPresenter: FavListInterface.FavListPresenter
         var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        val unSortList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     }
 
-    lateinit var _view:View
+    lateinit var _view: View
 
     override fun hideLoading() {
         view?.swipeRefresh?.isRefreshing = false
@@ -71,15 +71,13 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
     ): View? {
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_favorite, container, false)
-
-
         return _view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mFavListPresenter = FavListPresenter(this, context!!,this@FavoriteFragment)
+        mFavListPresenter = FavListPresenter(this, context!!, this@FavoriteFragment)
 
-        mAdapter = CustomAdapter(context!!,favList)
+        mAdapter = CustomAdapter(context!!)
         _view.favRecyclerView.let {
             it.adapter = mAdapter
 
@@ -95,52 +93,28 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
             mFavListPresenter.setUpWorkerThread()
             mFavListPresenter.setupDatabase()
 
-            mFavListPresenter.feedData(selectedItem)
+            mFavListPresenter.sortData(selectedItem)
 
         }
 
-        //mFavListPresenter.feedData(selectedItem)
-
-//        _view.swipeRefresh.setOnRefreshListener {
-//            sortedList.clear()
-//            mFavListPresenter.feedData(selectedItem)
-//        }
-
-        // mFavListPresenter.feedData(selectedItem)
+        _view.swipeRefresh.setOnRefreshListener {
+            mFavListPresenter.sortData(selectedItem)
+        }
 
     }
 
-//    fun feedData(selectedItem: String) {
-//        this.selectedItem = selectedItem
-//
-//        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-//            object : BroadcastReceiver(){
-//                override fun onReceive(context: Context, intent: Intent) {
-//
-//                    favList.clear()
-//                    favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-//                    sortedList.clear()
-//                    sortedList.addAll(favList)
-//                     mAdapter.notifyDataSetChanged()
-//                    Log.d("sortFragment",sortedList.toString())
-//
-//                }
-//            },
-//            IntentFilter(RECEIVED_NEW_MESSAGE)
-//        )
-//
-//        Log.d("favList",sortedList.toString())
-//
-//        Handler().postDelayed({
-//            //todo
-//            view?.swipeRefresh?.isRefreshing = false
-//        },3000)
-//
-//        mAdapter.notifyDataSetChanged()
-//    }
 
+    inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
+        CustomItemTouchHelperListener {
 
-    inner class CustomAdapter(val context: Context, private val androidList: ArrayList<MobileBean>) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(), CustomItemTouchHelperListener {
+        var androidList: ArrayList<FavoriteEntity> = arrayListOf()
+
+        fun setData(list: List<FavoriteEntity>) {
+            androidList.clear()
+            androidList.addAll(list)
+            Log.d("clearList", androidList.toString())
+        }
+
         override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
             Collections.swap(androidList, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
@@ -148,14 +122,10 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
         }
 
         override fun onItemDismiss(position: Int) {
-            androidList?.removeAt(position)
-            sortedList.removeAt(position)
-//            sendBoardcastUpdateList(sortedList)
-            mDataArrayUpdate.addAll(sortedList)
-            FavoriteFragment.mAdapter.notifyDataSetChanged()
+            mFavListPresenter.deleteFavorite(androidList[position].mobileID!!)
+            androidList.removeAt(position)
+            notifyItemRemoved(position)
             Log.d("deletefav", mDataArrayUpdate.toString())
-//            notifyItemRemoved(position)
-//            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
@@ -169,46 +139,34 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
             )
         }
 
-        override fun getItemCount(): Int = a.size
+        override fun getItemCount(): Int = androidList.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
 
-            val item = a[position]
+            val item = androidList[position]
 
             holder.titleTextView.text = item.name
             holder.priceTextView.text = item.price.toString()
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context).load(item.thumbImageURL).into(holder.youtubeImageView)
-
-
-    }
+        }
 
         inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-            val titleTextView : TextView = view.textViewTitle
-            val priceTextView : TextView = view.price
-            val youtubeImageView : ImageView = view.mobileImg
+            val titleTextView: TextView = view.textViewTitle
+            val priceTextView: TextView = view.price
+            val youtubeImageView: ImageView = view.mobileImg
             val rating: TextView = view.textViewRating
-
         }
     }
 
-
-//    private fun sendBoardcastUpdateList(sortedList: ArrayList<MobileBean>) {
-//        Intent(RECEIVED_UPDATE).let {
-//            it.putParcelableArrayListExtra(RECEIVED_MESSAGE, sortedList)
-//            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
-//            Log.d("sortList",sortedList.toString())
-//        }
-//    }
-
-
-    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) : ItemTouchHelper.Callback() {
+    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) :
+        ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
 
             val dragFlags = 0
             val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+            return makeMovementFlags(dragFlags, swipeFlags)
         }
 
         override fun onMove(
@@ -220,7 +178,7 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewHolder?.let {
+            viewHolder.let {
                 listener.onItemDismiss(viewHolder.adapterPosition)
             }
         }
@@ -228,7 +186,7 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
     }
 
     interface CustomItemTouchHelperListener {
-        fun onItemMove(fromPosition: Int, toPosition: Int) : Boolean
+        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
 
         fun onItemDismiss(position: Int)
     }
