@@ -3,24 +3,22 @@ package com.codemobiles.mymobilephone.presenter
 import android.content.Context
 import android.os.Handler
 import android.util.Log
-import android.view.View
 import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.mAdapter
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.mFavListPresenter
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.unSortList
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.sortedList
-import kotlinx.android.synthetic.main.fragment_favorite.view.*
 
 class FavListPresenter(
     _view: FavListInterface.FavListView,
     context: Context,
     favoriteFragment: FavoriteFragment
 ) : FavListInterface.FavListPresenter {
+
+    lateinit var mCMWorkerThread : CMWorkerThread
+    var mDatabaseAdapter : AppDatabase? = null
     val context:Context = context
 
 
@@ -35,13 +33,6 @@ class FavListPresenter(
     private var selectedItem:String = "default"
     private var view: FavListInterface.FavListView = _view
 
-
-    companion object{
-        val unSortFavList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        val favListUpdate:ArrayList<MobileBean> = ArrayList<MobileBean>()
-        var showList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-
-    }
     override fun updateFavList(
         mDataArrayUpdate: ArrayList<MobileBean>,
         item: MobileBean,
@@ -57,28 +48,12 @@ class FavListPresenter(
     }
 
     override fun feedData(selectedItem: String) {
-        this.selectedItem = selectedItem
+        val task = Runnable{
 
-//        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-//            object : BroadcastReceiver(){
-//                override fun onReceive(context: Context, intent: Intent) {
-//
-//                    favList.clear()
-//                    favList.addAll(intent.getParcelableArrayListExtra(RECEIVED_MESSAGE))
-//                    sortedList.clear()
-//                    sortedList.addAll(favList)
-//                     mAdapter.notifyDataSetChanged()
-//                    Log.d("sortFragment",sortedList.toString())
-//
-//                }
-//            },
-//            IntentFilter(RECEIVED_NEW_MESSAGE)
-//        )
-
-//        MobileListPresenter.mMobileArray.clear()
-
-//        mAdapter.notifyDataSetChanged()
-
+            var selectedList : List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            view?.getFav(selectedList)
+        }
+        mCMWorkerThread.postTask(task)
 
         Log.d("favList",sortedList.toString())
         Handler().postDelayed({
@@ -90,29 +65,59 @@ class FavListPresenter(
 
 
     override fun sortData(selectedItem: String){
+
+
+
+        val task = Runnable{
+
+            var selectedList : List<FavoriteEntity>? = listOf()
+            val checkId = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+
+            Log.d("checkId",checkId.toString())
+
+
         when (selectedItem) {
             "Rating 5-1" ->{
+                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortRating()
                 sortedList.sortByDescending { it.rating }
-                Log.d("filter1", sortedList.toString())
+                Log.d("filter1", selectedList.toString())
             }
 
             "Price low to high" -> {
+                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceL()
                 sortedList.sortBy { it.price }
-                Log.d("filter22", sortedList.toString())
+                Log.d("filter2", selectedList.toString())
             }
             "Price high to low" ->{
-
+                selectedList = mDatabaseAdapter?.favoriteDAO()?.querySortPriceH()
                 sortedList.sortByDescending { it.price }
-                Log.d("filter3", sortedList.toString())
+                Log.d("filter3", selectedList.toString())
             }
             else -> { // Note the block
-
+//                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
                 sortedList.addAll(sortedList)
 
-                Log.d("filter4", sortedList.toString())
+                Log.d("filter4", selectedList.toString())
             }
         }
-        FavoriteFragment.mAdapter.notifyDataSetChanged()
+            view?.getFav(selectedList)
+//        FavoriteFragment.mAdapter.notifyDataSetChanged()
+
+        }
+        mCMWorkerThread.postTask(task)
     }
 
+    override fun setUpWorkerThread() {
+        mCMWorkerThread = CMWorkerThread("scb_database").also {
+            it.start()
+        }
+    }
+
+    override fun setupDatabase() {
+        mDatabaseAdapter = AppDatabase.getInstance(context).also {
+            // Instance does not create the database.
+            // It will do so once call writableDatabase or readableDatabase
+            it.openHelper.readableDatabase
+        }
+    }
 }

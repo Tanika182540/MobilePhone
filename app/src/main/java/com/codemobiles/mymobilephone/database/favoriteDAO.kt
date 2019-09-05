@@ -19,13 +19,13 @@ interface favoriteDAO {
 
     @Query("DELETE FROM favoritePhone WHERE mobileID = :mobileId")
     fun deleteFavorite(mobileId:Int)
-//
-//    @Query( "select * from favoritePhone ORDER BY price DESC")
-//    fun querySortPriceH(): ArrayList<FavoriteEntity>
-//
-//    @Query( "select * from favoritePhone ORDER BY price")
-//    fun querySortPriceL(): ArrayList<FavoriteEntity>
-//
-//    @Query( "select * from favoritePhone ORDER BY rating DESC")
-//    fun querySortRating(): ArrayList<FavoriteEntity>
+
+    @Query( "select * from favoritePhone ORDER BY price DESC")
+    fun querySortPriceH(): List<FavoriteEntity>
+
+    @Query( "select * from favoritePhone ORDER BY price")
+    fun querySortPriceL(): List<FavoriteEntity>
+
+    @Query( "select * from favoritePhone ORDER BY rating DESC")
+    fun querySortRating(): List<FavoriteEntity>
 }

@@ -23,7 +23,6 @@ import com.codemobiles.mymobilephone.RECEIVED_MESSAGE
 import com.codemobiles.mymobilephone.RECEIVED_TOKEN
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
-import com.codemobiles.mymobilephone.presenter.FavListPresenter.Companion.showList
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 import retrofit2.Call
 import retrofit2.Callback

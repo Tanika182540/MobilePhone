@@ -40,6 +40,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
+    var a: List<FavoriteEntity> = listOf()
+    override fun getFav(selectedList: List<FavoriteEntity>?) {
+        a = selectedList!!
+        Log.d("listfav",selectedList.toString())
+//        mAdapter.notifyDataSetChanged()
+    }
 
 
     //var favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
@@ -86,6 +92,10 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(_view.favRecyclerView)
 
+            mFavListPresenter.setUpWorkerThread()
+            mFavListPresenter.setupDatabase()
+
+            mFavListPresenter.feedData(selectedItem)
 
         }
 
@@ -159,11 +169,11 @@ class FavoriteFragment : Fragment() ,FavListInterface.FavListView{
             )
         }
 
-        override fun getItemCount(): Int = sortedList.size
+        override fun getItemCount(): Int = a.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
 
-            val item = sortedList[position]
+            val item = a[position]
 
             holder.titleTextView.text = item.name
             holder.priceTextView.text = item.price.toString()

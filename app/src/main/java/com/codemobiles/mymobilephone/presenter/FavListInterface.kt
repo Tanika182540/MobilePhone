@@ -2,11 +2,13 @@ package com.codemobiles.mymobilephone.presenter
 
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.database.FavoriteEntity
 
 interface FavListInterface {
 
     interface FavListView {
         fun hideLoading()
+        fun getFav(selectedList: List<FavoriteEntity>?)
     }
 
     interface FavListPresenter {
@@ -17,7 +19,8 @@ interface FavListInterface {
         )
         fun feedData(selectedItem: String)
         fun sortData(selectedItem: String)
-
+        fun setUpWorkerThread()
+        fun setupDatabase()
 
 
     }
