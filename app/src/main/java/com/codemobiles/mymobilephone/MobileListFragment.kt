@@ -62,7 +62,10 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
     }
 
     override fun updateSortType(sort: String) {
-        mMobileListPresenter.feedData(sort)
+//        mMobileListPresenter.feedData(sort)
+        mMobileArray.clear()
+        mMobileArray = mMobileListPresenter.sortData(sort)
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,6 +91,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
         }
         mMobileListPresenter.setUpWorkerThread()
         mMobileListPresenter.setupDatabase()
+        mMobileArray.clear()
         mMobileArray = mMobileListPresenter.feedData("default")
 
     }
@@ -108,6 +112,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
         override fun getItemCount(): Int = mMobileArray.size
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
+
             val item = mMobileArray[position]
 
 

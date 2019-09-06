@@ -23,6 +23,6 @@ interface MobileListInterface {
         fun addFavoriteButton()
         fun loadDatabase(): ArrayList<MobileBean>
         fun sendTask(task:Runnable)
-
+        fun sortData(sort:String): ArrayList<MobileBean>
     }
 }

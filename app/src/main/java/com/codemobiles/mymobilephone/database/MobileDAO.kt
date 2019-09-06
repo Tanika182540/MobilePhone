@@ -23,4 +23,11 @@ interface MobileDAO {
 
     @Query("DELETE FROM mobilePhone")
     fun clearMobileList()
+
+    @Query( "select * from mobilePhone")
+    fun querySort(): List<MobileEntity>
+
+    @Query( "select phoneList from mobilePhone")
+    fun querySortMobile(): List<MobileEntity>
+
 }

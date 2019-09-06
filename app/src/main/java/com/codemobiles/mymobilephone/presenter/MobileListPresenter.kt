@@ -5,6 +5,7 @@ package com.codemobiles.mymobilephone.presenter
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import com.codemobiles.mobilephone.FavoriteFragment.Companion.favList
 import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.MobileListFragment
@@ -23,6 +24,55 @@ class MobileListPresenter(
     mobileListFragment: MobileListFragment,
     context: Context
 ) : MobileListInterface.MobileListPresenter{
+
+
+    override fun sortData(sort: String):ArrayList<MobileBean> {
+        var sortedMobile:ArrayList<MobileBean> = ArrayList<MobileBean>()
+        val task = Runnable {
+
+            var selectedList: List<MobileEntity>? = listOf()
+            selectedList = mDatabaseAdapter?.mobileDao()?.querySortMobile()
+            val checkId = mDatabaseAdapter?.mobileDao()?.querySortMobile()
+
+
+            mMobileArray.clear()
+            if (mDataArray.isEmpty()){
+                mDataArray.addAll(selectedList?.get(0)!!.phoneList)
+            }
+            Log.d("checkId",selectedList?.get(0)!!.phoneList.size.toString())
+            var text:List<MobileBean> = listOf()
+            sortedMobile.clear()
+            when (sort) {
+
+                "Rating 5-1" -> {
+                    sortedMobile.clear()
+                    Log.d("checkId!",sortedMobile.size.toString())
+                    sortedMobile.addAll(mDataArray.sortedByDescending({it.rating}))
+                    Log.d("checkId!",sortedMobile.size.toString())
+
+                }
+                "Price low to high" -> {
+                    sortedMobile.clear()
+                    sortedMobile.addAll(mDataArray.sortedBy { it.price })
+                    Log.d("checkId!",sortedMobile.size.toString())
+                }
+                "Price high to low" -> {
+                    sortedMobile.clear()
+                    sortedMobile.addAll(mDataArray.sortedByDescending { it.price })
+                    Log.d("checkId!",sortedMobile.size.toString())
+                }
+                else -> { // Note the block
+//                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+//                    Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show()
+//                Log.d("filter4", selectedList.toString())
+                }
+            }
+
+            Log.d("DATAMAIN",mDataArray.toString())
+        }
+        mCMWorkerThread.postTask(task)
+        return sortedMobile
+    }
 
 
     override fun sendTask(task: Runnable) {
@@ -49,10 +99,6 @@ class MobileListPresenter(
     var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    companion object{
-        lateinit var mobileData:MobileEntity
-
-    }
 
     override fun addFavoriteButton() {
         val task = Runnable{
@@ -91,27 +137,6 @@ class MobileListPresenter(
                         }
                     }
 
-                    Log.d("SCB_NETWORK",mDataArray.toString())
-                    mMobileArray.clear()
-
-                    when (selectedItem) {
-                        "Rating 5-1" ->{
-                            mMobileArray.addAll(mDataArray.sortedWith(compareBy({ it.rating })))
-                            Log.d("filter1", mMobileArray.toString())
-                        }
-                        "Price low to high" -> {
-                            mMobileArray.addAll(mDataArray.sortedWith(compareBy({ it.price })))
-                            Log.d("filter2", mMobileArray.toString())
-                        }
-                        "Price high to low" ->{
-                            mMobileArray.addAll( mDataArray.sortedByDescending { it.price })
-                            Log.d("filter3", mMobileArray.toString())
-                        }
-                        else -> { // Note the block
-                            mMobileArray.addAll(mDataArray)
-                            Log.d("filter4", mMobileArray.toString())
-                        }
-                    }
                     _view.showData()
 
                 }

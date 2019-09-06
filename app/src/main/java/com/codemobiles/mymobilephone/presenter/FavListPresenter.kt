@@ -67,7 +67,7 @@ class FavListPresenter(
             var selectedList: List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             val checkId = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
 
-            Log.d("checkId", checkId.toString())
+//            Log.d("checkId", checkId.toString())
 
             when (selectedItem) {
                 "Rating 5-1" -> {
