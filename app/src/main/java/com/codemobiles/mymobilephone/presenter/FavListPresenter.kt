@@ -10,7 +10,6 @@ import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.sortedList
 
 class FavListPresenter(
     _view: FavListInterface.FavListView,
@@ -53,7 +52,6 @@ class FavListPresenter(
         }
         mCMWorkerThread.postTask(task)
 
-        Log.d("favList", sortedList.toString())
         Handler().postDelayed({
             //todo
             view?.hideLoading()
@@ -97,10 +95,6 @@ class FavListPresenter(
         }
         mCMWorkerThread.postTask(task)
 
-        Handler().postDelayed({
-            //todo
-            view?.hideLoading()
-        }, 3000)
     }
 
     override fun setUpWorkerThread() {

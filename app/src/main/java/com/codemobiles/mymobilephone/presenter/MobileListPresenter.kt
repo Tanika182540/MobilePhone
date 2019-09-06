@@ -4,7 +4,6 @@ package com.codemobiles.mymobilephone.presenter
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import com.codemobiles.mobilephone.FavoriteFragment.Companion.favList
 import com.codemobiles.mobilephone.MobileDetailActivity
@@ -24,20 +23,23 @@ class MobileListPresenter(
     mobileListFragment: MobileListFragment,
     context: Context
 ) : MobileListInterface.MobileListPresenter{
-    override fun loadDatabase() {
+
+
+    override fun sendTask(task: Runnable) {
+        mCMWorkerThread.postTask(task)    }
+
+    override fun loadDatabase():ArrayList<MobileBean>{
+
+        var loadData: ArrayList<MobileEntity>? = null
+        return mDatabaseAdapter?.let{
+            it.mobileDao().queryMobile()?.phoneList
+        }?:run {
+            arrayListOf<MobileBean>()
+        }
+        Log.d("MYDATAAAAAA",mDatabaseAdapter?.mobileDao()?.queryMobile().toString())
 
     }
 
-
-//    }
-
-    //    override fun getAllMobile(): MobileEntity? {
-//        var mobileList: MobileEntity?
-//        val task = Runnable {
-//           mobileData = mDatabaseAdapter?.mobileDao()?.queryMobile()!!
-//        }
-//        return  mobileData
-//        mCMWorkerThread.postTask(task)
     val context:Context = context
     val mobileListFragment:MobileListFragment = mobileListFragment
     lateinit var mCMWorkerThread : CMWorkerThread
@@ -46,8 +48,8 @@ class MobileListPresenter(
     var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
     var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
+    var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     companion object{
-        var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
         lateinit var mobileData:MobileEntity
 
     }
@@ -61,7 +63,7 @@ class MobileListPresenter(
         mCMWorkerThread.postTask(task)
     }
 
-    override fun feedData(selectedItem: String) {
+    override fun feedData(selectedItem: String):ArrayList<MobileBean>{
         val call = ApiInterface.getClient().getMobileDetail()
 
         //change <YoutubeResponse>
@@ -78,6 +80,11 @@ class MobileListPresenter(
                     if (mDataArray.isNotEmpty()){
                         for (i in 0 until mDataArray!!.size){
                             val task = Runnable {
+                                val mobileEntity = MobileEntity(null, mDataArray)
+                                mDatabaseAdapter?.mobileDao()?.clearMobileList()
+//                                var mobileEntity = MobileEntity(mDataArray[i].id,mDataArray[i].description,mDataArray[i].thumbImageURL,mDataArray[i].name,mDataArray[i].price,mDataArray[i].brand,mDataArray[i].rating )
+                                mDatabaseAdapter?.mobileDao()?.insertMobileList(mobileEntity)
+
 
                             }
                             mCMWorkerThread.postTask(task)
@@ -113,10 +120,9 @@ class MobileListPresenter(
 
         })
         _view.getListMobile(mMobileArray)
-        Handler().postDelayed({
-            //todo
-            _view?.hideLoading()
-        },3000)
+
+        return mDataArray
+
     }
 
     override fun removeFavorite(item: MobileBean, position: Int) {

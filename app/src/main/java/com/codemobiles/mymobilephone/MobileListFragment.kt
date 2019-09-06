@@ -3,6 +3,7 @@ package com.codemobiles.mobilephone
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -76,11 +77,19 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
 
 
         _view.swipeRefresh.setOnRefreshListener {
-            mMobileListPresenter.feedData("default")
+
+            val task = Runnable {
+                mMobileArray = mMobileListPresenter.loadDatabase()
+            }
+            mMobileListPresenter.sendTask(task)
+            mAdapter.notifyDataSetChanged()
+            hideLoading()
+
         }
         mMobileListPresenter.setUpWorkerThread()
         mMobileListPresenter.setupDatabase()
-        mMobileListPresenter.feedData("default")
+        mMobileArray = mMobileListPresenter.feedData("default")
+
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
@@ -100,6 +109,14 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = mMobileArray[position]
+
+
+            holder.titleTextView.text = item.name
+            holder.subtitleTextView.text = item.description
+            holder.price.text = "Price : $ " + item.price
+            holder.rating.text = "Rating : " + item.rating
+            Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
+            mMobileListPresenter.addFavoriteButton()
             var favItem = FavoriteEntity(
                 item.id,
                 item.description,
@@ -109,16 +126,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
                 item.brand,
                 item.rating
             )
-
-            holder.titleTextView.text = item.name
-            holder.subtitleTextView.text = item.description
-            holder.price.text = "Price : $ " + item.price
-            holder.rating.text = "Rating : " + item.rating
-            Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
-
             holder.favButton.isChecked = checkFavButton!!.contains(favItem)
-
-            mMobileListPresenter.addFavoriteButton()
 
 
             holder.favButton.setOnCheckedChangeListener { button, isChecked ->

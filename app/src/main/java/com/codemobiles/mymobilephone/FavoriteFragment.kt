@@ -20,7 +20,6 @@ import com.codemobiles.mymobilephone.*
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.presenter.FavListInterface
 import com.codemobiles.mymobilephone.presenter.FavListPresenter
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter.Companion.sortedList
 import kotlinx.android.synthetic.main.custom_list.view.mobileImg
 import kotlinx.android.synthetic.main.custom_list.view.textViewRating
 import kotlinx.android.synthetic.main.custom_list.view.textViewTitle
@@ -35,6 +34,7 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
     override fun updateSortType(sort: String) {
 
         mFavListPresenter.sortData(sort)
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun getFav(selectedList: List<FavoriteEntity>?) {
@@ -99,6 +99,7 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
 
         _view.swipeRefresh.setOnRefreshListener {
             mFavListPresenter.sortData(selectedItem)
+            hideLoading()
         }
 
     }

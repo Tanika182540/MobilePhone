@@ -13,7 +13,7 @@ interface MobileListInterface {
     }
 
     interface MobileListPresenter {
-        fun feedData(selectedItem: String)
+        fun feedData(selectedItem: String): ArrayList<MobileBean>
         fun removeFavorite(item: MobileBean, position: Int)
         fun addToFavorite(item: MobileBean, position: Int)
 //        fun recieveBroadcast(view:View)
@@ -21,7 +21,8 @@ interface MobileListInterface {
         fun setUpWorkerThread()
         fun setupDatabase()
         fun addFavoriteButton()
-        fun loadDatabase()
-//        fun getAllMobile(mMobileEnitity:MobileEntity): MobileEntity?
+        fun loadDatabase(): ArrayList<MobileBean>
+        fun sendTask(task:Runnable)
+
     }
 }

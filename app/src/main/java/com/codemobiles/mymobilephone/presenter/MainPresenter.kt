@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.mFavListPresenter
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.MainActivity
 import java.lang.IllegalArgumentException

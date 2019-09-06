@@ -1,6 +1,7 @@
 package com.codemobiles.mymobilephone.database
 
 import androidx.room.*
+import com.codemobiles.mobilephone.models.MobileBean
 
 @Dao
 interface MobileDAO {
@@ -17,9 +18,9 @@ interface MobileDAO {
 //    }
 
     @Insert
-    fun insertMobileList(mobileEntity:MobileEntity)
+    fun insertMobileList(mobileEntity: MobileEntity)
 
 
-//    @Query("DELETE FROM mobilePhone")
-//    fun clearMobileList()
+    @Query("DELETE FROM mobilePhone")
+    fun clearMobileList()
 }
