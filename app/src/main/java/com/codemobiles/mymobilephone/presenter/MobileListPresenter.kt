@@ -71,6 +71,7 @@ class MobileListPresenter(
             Log.d("DATAMAIN",mDataArray.toString())
         }
         mCMWorkerThread.postTask(task)
+        _view.showData()
         return sortedMobile
     }
 

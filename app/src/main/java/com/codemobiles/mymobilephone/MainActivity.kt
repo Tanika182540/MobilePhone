@@ -41,54 +41,28 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
         sortButton.setOnClickListener {
             showSortDialog()
         }
-//
-//        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-//            override fun onPageScrollStateChanged(state: Int) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onPageSelected(position: Int) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//        })
 
-//        favoriteData(selectedItem)
     }
 
     private fun showSortDialog() {
         lateinit var dialog: AlertDialog
-        // Initialize a new instance of
         val array = arrayOf("Price low to high", "Price high to low", "Rating 5-1")
 
-        // Initialize a new instance of alert dialog builder object
         val builder = AlertDialog.Builder(this)
 
         builder.setSingleChoiceItems(array, -1) { _, which ->
-            // Get the dialog selected item
            val  selectedItem = array[which]
 
             try {
                 sectionsPagerAdapter.updateSort(selectedItem)
 
-//                mMobileListPresenter.feedData(selectedItem)
-//                FavoriteFragment.mFavListPresenter.sortData(selectedItem)
-
                 Log.d("selected", selectedItem)
 
             } catch (e: IllegalArgumentException) {
-                // Catch the color string parse exception
             }
-            // Dismiss the dialog
             dialog.dismiss()
         }
-        // Initialize the AlertDialog using builder object
         dialog = builder.create()
-        // Finally, display the alert dialog
         dialog.show()
     }
 }

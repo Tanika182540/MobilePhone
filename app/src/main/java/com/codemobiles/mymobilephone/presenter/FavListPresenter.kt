@@ -86,7 +86,7 @@ class FavListPresenter(
                     Log.d("filter3", selectedList.toString())
                 }
                 else -> { // Note the block
-//                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
                     Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show()
 //                Log.d("filter4", selectedList.toString())
                 }

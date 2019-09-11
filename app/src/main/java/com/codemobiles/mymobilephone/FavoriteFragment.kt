@@ -41,7 +41,6 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
         activity?.runOnUiThread {
             selectedList?.let {
                 mAdapter.setData(selectedList)
-                mAdapter.notifyDataSetChanged()
             }
 
         }
@@ -93,9 +92,12 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
             mFavListPresenter.setUpWorkerThread()
             mFavListPresenter.setupDatabase()
 
-            mFavListPresenter.sortData(selectedItem)
+
+            mFavListPresenter.feedData("default")
 
         }
+
+
 
         _view.swipeRefresh.setOnRefreshListener {
             mFavListPresenter.sortData(selectedItem)
@@ -103,6 +105,7 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
         }
 
     }
+
 
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
@@ -113,6 +116,7 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
         fun setData(list: List<FavoriteEntity>) {
             androidList.clear()
             androidList.addAll(list)
+            mAdapter.notifyDataSetChanged()
             Log.d("clearList", androidList.toString())
         }
 

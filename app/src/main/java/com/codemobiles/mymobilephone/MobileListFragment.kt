@@ -65,6 +65,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
 //        mMobileListPresenter.feedData(sort)
         mMobileArray.clear()
         mMobileArray = mMobileListPresenter.sortData(sort)
+        mMobileListPresenter.addFavoriteButton()
         mAdapter.notifyDataSetChanged()
     }
 
@@ -85,6 +86,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
                 mMobileArray = mMobileListPresenter.loadDatabase()
             }
             mMobileListPresenter.sendTask(task)
+            mMobileListPresenter.addFavoriteButton()
             mAdapter.notifyDataSetChanged()
             hideLoading()
 
@@ -93,6 +95,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
         mMobileListPresenter.setupDatabase()
         mMobileArray.clear()
         mMobileArray = mMobileListPresenter.feedData("default")
+        mMobileListPresenter.addFavoriteButton()
 
     }
 
@@ -121,7 +124,6 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
             holder.price.text = "Price : $ " + item.price
             holder.rating.text = "Rating : " + item.rating
             Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
-            mMobileListPresenter.addFavoriteButton()
             var favItem = FavoriteEntity(
                 item.id,
                 item.description,
