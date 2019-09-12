@@ -87,7 +87,6 @@ class MobileListPresenter(
         }?:run {
             arrayListOf<MobileBean>()
         }
-        Log.d("MYDATAAAAAA",mDatabaseAdapter?.mobileDao()?.queryMobile().toString())
 
     }
 
@@ -116,7 +115,7 @@ class MobileListPresenter(
         //change <YoutubeResponse>
         call.enqueue(object : Callback<List<MobileBean>> {
             override fun onFailure(call: Call<List<MobileBean>>, t: Throwable) {
-                //Log.d("SCB_NETWORK " , t.message.toString())
+                Log.d("SCB_NETWORK " , t.message.toString())
             }
 
             override fun onResponse(call: Call<List<MobileBean>>, response: Response<List<MobileBean>>) {

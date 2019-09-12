@@ -10,6 +10,13 @@
         android:layout_marginHorizontal="8dp"
         >
 
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    </androidx.viewpager.widget.ViewPager>
+
+
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -18,18 +25,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
         >
+
+
             <RelativeLayout
                     android:id="@+id/relative1"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="450dp">
+                    android:layout_height="wrap_content">
 
-                <com.ouattararomuald.slider.ImageSlider
+<!--                <com.ouattararomuald.slider.ImageSlider-->
 
-                        android:id="@+id/image_slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
+<!--                        android:id="@+id/image_slider"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        />-->
 
                 <TextView
                         android:textSize="16sp"

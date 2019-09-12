@@ -2,45 +2,32 @@ package com.codemobiles.mobilephone
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.widget.LinearLayout
+import androidx.viewpager.widget.ViewPager
 import com.codemobiles.mymobilephone.R
+import com.codemobiles.mymobilephone.ViewPagerAdapter
 import com.codemobiles.mymobilephone.models.MobileImage
 import com.codemobiles.mymobilephone.presenter.MobileDetailInterface
 import com.codemobiles.mymobilephone.presenter.MobileDetailPresenter
 import com.ouattararomuald.slider.ImageSlider
-import com.ouattararomuald.slider.SliderAdapter
-import com.ouattararomuald.slider.loaders.picasso.PicassoImageLoaderFactory
 import kotlinx.android.synthetic.main.activity_mobile_detail.*
 
 class MobileDetailActivity : AppCompatActivity(),MobileDetailInterface.DetailView{
-    override fun setImage(imageArray: ArrayList<MobileImage>) {
-        this.mDataArray = imageArray
-        var imageList = arrayListOf(
-            "http://i.imgur.com/CqmBjo5.jpg",
-            "http://i.imgur.com/zkaAooq.jpg",
-            "http://i.imgur.com/0gqnEaY.jpg"
-        )
-        imageList.clear()
-        var size = mDataArray.size
 
-        for (i in 0 until  size){
+    private lateinit var viewPager: ViewPager
+    private lateinit var viewPagerAapter: ViewPagerAdapter
+    private var width: Int = 0
+    private var height: Int = 0
 
-            if(mDataArray[i].url.contains("http")){
-                imageList.add(mDataArray[i].url)
-            }else{
-                imageList.add("http://" + mDataArray[i].url)
-            }
+    override fun setImage(imageArray: ArrayList<String>) {
 
+            viewPagerAapter = ViewPagerAdapter(this, imageArray, width, height)
+            val params = LinearLayout.LayoutParams(width, height)
+            viewPager.setLayoutParams(params)
+            viewPager.adapter = viewPagerAapter
+            viewPager.setAdapter(viewPagerAapter)
 
-        }
-        //Log.d("SCB_NETWORK",imageList.toString())
-
-        var imageUrls = arrayListOf(imageList)
-        imageSlider = findViewById(R.id.image_slider)
-        imageSlider.adapter = SliderAdapter(
-            applicationContext,
-            PicassoImageLoaderFactory(),
-            imageUrls = imageList
-        )
     }
 
     private var mDataArray: ArrayList<MobileImage> = ArrayList<MobileImage>()
@@ -49,6 +36,12 @@ class MobileDetailActivity : AppCompatActivity(),MobileDetailInterface.DetailVie
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mobile_detail)
+
+        viewPager = findViewById(R.id.view_pager_image)
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        width = displayMetrics.widthPixels
+        height = (displayMetrics.heightPixels * 35) / 100
 
         mMobileDetailPresenter = MobileDetailPresenter(this,applicationContext)
         val name = intent.getStringExtra("name")

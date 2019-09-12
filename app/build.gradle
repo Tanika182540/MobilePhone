@@ -43,9 +43,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.gsonVersion"
 
     // Image loading framework
-    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
-    implementation 'com.ouattararomuald:slider-glide:2.0.0'
-    implementation 'com.ouattararomuald:slider-picasso:2.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.ouattararomuald:slider-glide:2.0.0' // If you use Glide
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
