@@ -1,7 +1,5 @@
 package com.codemobiles.mymobilephone.mobiledetailactivity
 
-import com.codemobiles.mymobilephone.models.MobileImage
-
 
 interface MobileDetailInterface {
         interface DetailView {

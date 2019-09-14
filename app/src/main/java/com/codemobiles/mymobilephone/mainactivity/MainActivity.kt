@@ -9,11 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AlertDialog
 import com.codemobiles.mymobilephone.R
+import com.codemobiles.mymobilephone.helper.PRICE_H_L
+import com.codemobiles.mymobilephone.helper.PRICE_L_H
+import com.codemobiles.mymobilephone.helper.RATING_5_1
 import com.codemobiles.mymobilephone.ui.main.SectionsPagerAdapter
 import java.lang.IllegalArgumentException
 
 
-class MainActivity : AppCompatActivity(), MainInterface.MainView {
+class MainActivity : AppCompatActivity() {
 
     lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
@@ -32,9 +35,7 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
         }
 
         viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(
                 position: Int,
@@ -43,17 +44,13 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
             ) {
             }
 
-            override fun onPageSelected(position: Int) {
-
-            }
-
+            override fun onPageSelected(position: Int) {}
         })
-
     }
 
     private fun showSortDialog() {
         lateinit var dialog: AlertDialog
-        val array = arrayOf("Price low to high", "Price high to low", "Rating 5-1")
+        val array = arrayOf(PRICE_L_H , PRICE_H_L, RATING_5_1)
 
         val builder = AlertDialog.Builder(this)
 

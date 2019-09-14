@@ -19,7 +19,6 @@ import com.codemobiles.mymobilephone.favoritefragment.FavListPresenter
 import com.codemobiles.mymobilephone.helper.SortTypeListener
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.swipeRefresh
-import kotlin.collections.ArrayList
 
 class FavoriteFragment : Fragment(), FavListInterface.FavListView,
     SortTypeListener {

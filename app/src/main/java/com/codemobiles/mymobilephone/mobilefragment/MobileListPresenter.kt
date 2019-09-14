@@ -5,7 +5,6 @@ package com.codemobiles.mymobilephone.mobilefragment
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
@@ -13,6 +12,9 @@ import com.codemobiles.mobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
+import com.codemobiles.mymobilephone.helper.PRICE_H_L
+import com.codemobiles.mymobilephone.helper.PRICE_L_H
+import com.codemobiles.mymobilephone.helper.RATING_5_1
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -25,6 +27,12 @@ class MobileListPresenter(
     context: Context
 ) : MobileListInterface.MobileListPresenter {
 
+    val context:Context = context
+    val mobileListFragment:MobileListFragment = mobileListFragment
+    lateinit var mCMWorkerThread : CMWorkerThread
+    var mDatabaseAdapter : AppDatabase? = null
+    var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     override fun sortData(sort: String, moblieList:ArrayList<MobileBean>) {
         var sortedMobile:ArrayList<MobileBean> = ArrayList<MobileBean>()
@@ -36,16 +44,16 @@ class MobileListPresenter(
             sortedMobile.clear()
             when (sort) {
 
-                "Rating 5-1" -> {
+                RATING_5_1 -> {
                     sortedMobile.addAll(mDataArray.sortedByDescending({it.rating}))
                     Log.d("checkId!",sortedMobile.size.toString())
 
                 }
-                "Price low to high" -> {
+                PRICE_L_H -> {
                     sortedMobile.addAll(mDataArray.sortedBy { it.price })
                     Log.d("checkId!",sortedMobile.size.toString())
                 }
-                "Price high to low" -> {
+                PRICE_H_L -> {
                     sortedMobile.addAll(mDataArray.sortedByDescending { it.price })
                     Log.d("checkId!",sortedMobile.size.toString())
                 }
@@ -60,21 +68,8 @@ class MobileListPresenter(
 
     }
 
-
     override fun sendTask(task: Runnable) {
         mCMWorkerThread.postTask(task)    }
-
-
-    val context:Context = context
-    val mobileListFragment:MobileListFragment = mobileListFragment
-    lateinit var mCMWorkerThread : CMWorkerThread
-    var mDatabaseAdapter : AppDatabase? = null
-
-    var favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-
-    var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     override fun getFavoriteList() {
         val task = Runnable{
@@ -106,8 +101,6 @@ class MobileListPresenter(
                     _view.submitlist(mDataArray)
                 }
             }
-
-
         })
 
         return mDataArray
@@ -136,9 +129,7 @@ class MobileListPresenter(
                     item.brand,
                     item.rating))
             }
-
         }
-//        _view.showData()
         mCMWorkerThread.postTask(task)
         Log.d("SCB_NETWORKadd", mDatabaseAdapter.toString())
 
@@ -165,10 +156,7 @@ class MobileListPresenter(
 
     override fun setupDatabase() {
         mDatabaseAdapter = AppDatabase.getInstance(context).also {
-            // Instance does not create the database.
-            // It will do so once call writableDatabase or readableDatabase
             it.openHelper.readableDatabase
         }
     }
-
 }

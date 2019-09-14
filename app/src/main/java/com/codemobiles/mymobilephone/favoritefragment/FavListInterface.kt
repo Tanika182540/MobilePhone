@@ -1,6 +1,5 @@
 package com.codemobiles.mymobilephone.favoritefragment
 
-import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 

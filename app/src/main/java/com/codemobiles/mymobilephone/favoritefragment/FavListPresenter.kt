@@ -11,6 +11,9 @@ import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
+import com.codemobiles.mymobilephone.helper.PRICE_H_L
+import com.codemobiles.mymobilephone.helper.PRICE_L_H
+import com.codemobiles.mymobilephone.helper.RATING_5_1
 
 class FavListPresenter(
     _view: FavListInterface.FavListView,
@@ -59,18 +62,18 @@ class FavListPresenter(
             var sortedList: List<FavoriteEntity>? = listOf()
 
             when (selectedItem) {
-                "Rating 5-1" -> {
+                RATING_5_1 -> {
 
                     sortedList = selectedList!!.sortedByDescending { it.rating }
                     Toast.makeText(context, "Rating 5-1", Toast.LENGTH_SHORT).show()
                     Log.d("filter1", selectedList.toString())
                 }
-                "Price low to high" -> {
+                PRICE_L_H -> {
                     sortedList = selectedList!!.sortedBy{ it.price }
                     Toast.makeText(context, "Price low to high", Toast.LENGTH_SHORT).show()
                     Log.d("filter2", selectedList.toString())
                 }
-                "Price high to low" -> {
+                PRICE_H_L -> {
                     sortedList = selectedList!!.sortedByDescending { it.price }
                     Toast.makeText(context, "Price high to low", Toast.LENGTH_SHORT).show()
                     Log.d("filter3", selectedList.toString())

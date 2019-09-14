@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
-import com.codemobiles.mymobilephone.models.MobileImage
 import com.squareup.picasso.Picasso
 
 

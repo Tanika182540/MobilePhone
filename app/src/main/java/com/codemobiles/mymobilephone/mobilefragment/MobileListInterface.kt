@@ -18,7 +18,6 @@ interface MobileListInterface {
         fun feedData(selectedItem: String): ArrayList<MobileBean>
         fun removeFavorite(item: MobileBean)
         fun addToFavorite(item: MobileBean)
-        //        fun recieveBroadcast(view:View)
         fun gotoDetailPage(item: MobileBean)
         fun setUpWorkerThread()
         fun setupDatabase()

@@ -1,16 +1,8 @@
 package com.codemobiles.mymobilephone.helper
 
 
-// Top level
-const val REGISTRATION_COMPLETE = "REGISTRATION_COMPLETE"
-const val RECEIVED_NEW_MESSAGE = "RECEIVED_NEW_MESSAGE"
-const val RECEIVED_TOKEN = "RECEIVED_TOKEN"
-const val RECEIVED_PLAYERID = "RECEIVED_PLAYERID"
-const val RECEIVED_MESSAGE = "RECEIVED_MESSAGE"
-const val RECEIVED_VAR = "RECEIVED_VAR"
-const val RECEIVED_MESSAGE2 = "RECEIVED_MESSAGE2"
-const val RECEIVED_FAVLIST = "RECEIVED_FAVLIST"
-const val RECEIVED_UPDATE = "RECEIVED_UPDATE"
-const val RECEIVED_ITEM = "RECEIVED_ITEM"
+const val PRICE_L_H = "Price low to high"
+const val PRICE_H_L = "Price high to low"
+const val RATING_5_1 = "Rating 5-1"
 const val DATABASE_NAME = "MOBILE_DATABASE"
 
