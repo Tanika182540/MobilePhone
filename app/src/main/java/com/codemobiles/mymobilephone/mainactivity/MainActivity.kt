@@ -1,6 +1,7 @@
 package com.codemobiles.mymobilephone.mainactivity
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
-
+        loadingDialog()
         sortButton.setOnClickListener {
             showSortDialog()
         }
@@ -70,5 +71,15 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
         }
         dialog = builder.create()
         dialog.show()
+    }
+
+    private fun loadingDialog() {
+        val builder = android.app.AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog,null)
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        val dialog = builder.create()
+        dialog.show()
+        Handler().postDelayed({dialog.dismiss()},1000)
     }
 }
