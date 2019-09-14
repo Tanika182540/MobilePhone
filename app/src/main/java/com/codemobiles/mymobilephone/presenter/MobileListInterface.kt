@@ -2,27 +2,28 @@ package com.codemobiles.mymobilephone.presenter
 
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.database.FavoriteEntity
+import com.codemobiles.mymobilephone.database.MobileEntity
 
 interface MobileListInterface {
     interface MobileListView {
 
-        fun checkFavoriteButton(selectedList: List<FavoriteEntity>?)
+        fun favoriteListData(selectedList: List<MobileBean>?)
         fun hideLoading()
         fun showData()
-        fun getListMobile(mMobileArray: ArrayList<MobileBean>)
+        fun submitlist(mobilelist: ArrayList<MobileBean>)
+        fun submitSortlist(mobilelist: ArrayList<MobileBean>)
     }
 
     interface MobileListPresenter {
         fun feedData(selectedItem: String): ArrayList<MobileBean>
-        fun removeFavorite(item: MobileBean, position: Int)
-        fun addToFavorite(item: MobileBean, position: Int)
-//        fun recieveBroadcast(view:View)
+        fun removeFavorite(item: MobileBean)
+        fun addToFavorite(item: MobileBean)
+        //        fun recieveBroadcast(view:View)
         fun gotoDetailPage(item: MobileBean)
         fun setUpWorkerThread()
         fun setupDatabase()
-        fun addFavoriteButton()
-        fun loadDatabase(): ArrayList<MobileBean>
+        fun getFavoriteList()
         fun sendTask(task:Runnable)
-        fun sortData(sort:String): ArrayList<MobileBean>
+        fun sortData(sort:String,moblieList:ArrayList<MobileBean>)
     }
 }

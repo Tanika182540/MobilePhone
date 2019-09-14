@@ -27,7 +27,4 @@ interface MobileDAO {
     @Query( "select * from mobilePhone")
     fun querySort(): List<MobileEntity>
 
-    @Query( "select phoneList from mobilePhone")
-    fun querySortMobile(): List<MobileEntity>
-
 }

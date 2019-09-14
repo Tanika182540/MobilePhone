@@ -24,9 +24,11 @@ class SectionsPagerAdapter(private val context: Context,val fm: FragmentManager)
         fm.fragments.forEach {
             if (it is SortTypeListener) {
                 it.updateSortType(sort)
+
             }
         }
     }
+
 
     override fun getItem(position: Int): Fragment {
         return when(position){
@@ -49,4 +51,6 @@ class SectionsPagerAdapter(private val context: Context,val fm: FragmentManager)
         // Show 2 total pages.
         return TAB_TITLES.size
     }
+
+
 }

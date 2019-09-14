@@ -5,8 +5,6 @@ package com.codemobiles.mymobilephone.presenter
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import com.codemobiles.mobilephone.FavoriteFragment.Companion.favList
 import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
@@ -14,7 +12,8 @@ import com.codemobiles.mobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
-import com.codemobiles.mymobilephone.database.MobileEntity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,85 +25,65 @@ class MobileListPresenter(
 ) : MobileListInterface.MobileListPresenter{
 
 
-    override fun sortData(sort: String):ArrayList<MobileBean> {
+    override fun sortData(sort: String, moblieList:ArrayList<MobileBean>) {
         var sortedMobile:ArrayList<MobileBean> = ArrayList<MobileBean>()
-        val task = Runnable {
-
-            var selectedList: List<MobileEntity>? = listOf()
-            selectedList = mDatabaseAdapter?.mobileDao()?.querySortMobile()
-            val checkId = mDatabaseAdapter?.mobileDao()?.querySortMobile()
-
 
             mMobileArray.clear()
             if (mDataArray.isEmpty()){
-                mDataArray.addAll(selectedList?.get(0)!!.phoneList)
+                mDataArray.addAll(moblieList)
             }
-            Log.d("checkId",selectedList?.get(0)!!.phoneList.size.toString())
-            var text:List<MobileBean> = listOf()
             sortedMobile.clear()
             when (sort) {
 
                 "Rating 5-1" -> {
-                    sortedMobile.clear()
-                    Log.d("checkId!",sortedMobile.size.toString())
                     sortedMobile.addAll(mDataArray.sortedByDescending({it.rating}))
                     Log.d("checkId!",sortedMobile.size.toString())
 
                 }
                 "Price low to high" -> {
-                    sortedMobile.clear()
                     sortedMobile.addAll(mDataArray.sortedBy { it.price })
                     Log.d("checkId!",sortedMobile.size.toString())
                 }
                 "Price high to low" -> {
-                    sortedMobile.clear()
                     sortedMobile.addAll(mDataArray.sortedByDescending { it.price })
                     Log.d("checkId!",sortedMobile.size.toString())
                 }
                 else -> { // Note the block
-//                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
-//                    Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show()
-//                Log.d("filter4", selectedList.toString())
+                    sortedMobile.addAll(mDataArray)
                 }
             }
 
             Log.d("DATAMAIN",mDataArray.toString())
-        }
-        mCMWorkerThread.postTask(task)
+        _view.submitSortlist(sortedMobile)
         _view.showData()
-        return sortedMobile
+
     }
 
 
     override fun sendTask(task: Runnable) {
         mCMWorkerThread.postTask(task)    }
 
-    override fun loadDatabase():ArrayList<MobileBean>{
-
-        var loadData: ArrayList<MobileEntity>? = null
-        return mDatabaseAdapter?.let{
-            it.mobileDao().queryMobile()?.phoneList
-        }?:run {
-            arrayListOf<MobileBean>()
-        }
-
-    }
 
     val context:Context = context
     val mobileListFragment:MobileListFragment = mobileListFragment
     lateinit var mCMWorkerThread : CMWorkerThread
     var mDatabaseAdapter : AppDatabase? = null
 
+    var favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
     var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
     var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     var sortedList: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
-    override fun addFavoriteButton() {
+    override fun getFavoriteList() {
         val task = Runnable{
 
-            var selectedList : List<FavoriteEntity>? = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
-            _view?.checkFavoriteButton(selectedList)
+            var selectedList= mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            val gson = Gson()
+            val json = gson.toJson(selectedList)
+            val dataList = gson.fromJson<List<MobileBean>>(json,object : TypeToken<List<MobileBean>>() {}.type)
+            _view?.favoriteListData(dataList)
+            Log.d("fromFavDB","fav " + selectedList.toString())
         }
         mCMWorkerThread.postTask(task)
     }
@@ -122,59 +101,45 @@ class MobileListPresenter(
                 if(response.isSuccessful){
                     mDataArray.clear()
                     mDataArray.addAll(response.body()!!)
-
-                    if (mDataArray.isNotEmpty()){
-                        for (i in 0 until mDataArray!!.size){
-                            val task = Runnable {
-                                val mobileEntity = MobileEntity(null, mDataArray)
-                                mDatabaseAdapter?.mobileDao()?.clearMobileList()
-//                                var mobileEntity = MobileEntity(mDataArray[i].id,mDataArray[i].description,mDataArray[i].thumbImageURL,mDataArray[i].name,mDataArray[i].price,mDataArray[i].brand,mDataArray[i].rating )
-                                mDatabaseAdapter?.mobileDao()?.insertMobileList(mobileEntity)
-
-
-                            }
-                            mCMWorkerThread.postTask(task)
-                        }
-                    }
-
                     _view.showData()
-
+                    _view.submitlist(mDataArray)
                 }
             }
 
 
         })
-        _view.getListMobile(mMobileArray)
 
         return mDataArray
 
     }
 
-    override fun removeFavorite(item: MobileBean, position: Int) {
-        var a: List<FavoriteEntity>?
-        favList.remove(item)
-        sortedList.clear()
-        sortedList.addAll(favList)
+    override fun removeFavorite(item: MobileBean) {
         val task = Runnable{
             mDatabaseAdapter?.favoriteDAO()?.deleteFavorite(item.id)
         }
         mCMWorkerThread.postTask(task)
+
+        Log.d("SCB_NETWORKremove", mDatabaseAdapter.toString())
     }
 
-    override fun addToFavorite(item: MobileBean, position: Int) {
-
-        favList.add(item)
-        sortedList.clear()
-        sortedList.addAll(favList)
+    override fun addToFavorite(item: MobileBean) {
 
         val task = Runnable{
             val checkId = mDatabaseAdapter?.favoriteDAO()?.queryDuplicateId(item.id)
 
             if (checkId == null){
-                mDatabaseAdapter!!.favoriteDAO().addFavorite(FavoriteEntity(item.id,item.description,item.thumbImageURL,item.name,item.price,item.brand,item.rating))
+//                Toast.makeText(context,"Item not duplicate.",Toast.LENGTH_LONG).show()
+                mDatabaseAdapter!!.favoriteDAO().addFavorite(FavoriteEntity(item.id,
+                    item.description,
+                    item.thumbImageURL,
+                    item.name,
+                    item.price,
+                    item.brand,
+                    item.rating))
             }
 
         }
+//        _view.showData()
         mCMWorkerThread.postTask(task)
         Log.d("SCB_NETWORKadd", mDatabaseAdapter.toString())
 

@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentTransaction
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.codemobiles.mobilephone.FavoriteFragment
 import com.codemobiles.mobilephone.models.MobileBean
@@ -41,6 +42,24 @@ class MainActivity : AppCompatActivity(), MainInterface.MainView {
         sortButton.setOnClickListener {
             showSortDialog()
         }
+
+        viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+
+            }
+
+        })
 
     }
 

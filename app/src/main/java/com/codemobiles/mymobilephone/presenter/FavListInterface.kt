@@ -12,11 +12,7 @@ interface FavListInterface {
     }
 
     interface FavListPresenter {
-        fun updateFavList(
-            mDataArrayUpdate: ArrayList<MobileBean>,
-            item: MobileBean,
-            holder: MobileListFragment.CustomHolder
-        )
+
         fun feedData(selectedItem: String)
         fun sortData(selectedItem: String)
         fun setUpWorkerThread()

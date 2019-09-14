@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.*
+import com.codemobiles.mymobilephone.adapter.CustomFavoriteAdapter
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.presenter.FavListInterface
 import com.codemobiles.mymobilephone.presenter.FavListPresenter
@@ -50,13 +51,9 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
 
     private var selectedItem: String = "default"
 
-    lateinit var mAdapter: CustomAdapter
-
-    companion object {
-        val favList: ArrayList<MobileBean> = ArrayList<MobileBean>()
-        lateinit var mFavListPresenter: FavListInterface.FavListPresenter
-        var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    }
+    lateinit var mAdapter: CustomFavoriteAdapter
+    lateinit var mFavListPresenter: FavListInterface.FavListPresenter
+    var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
 
     lateinit var _view: View
 
@@ -76,7 +73,16 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mFavListPresenter = FavListPresenter(this, context!!, this@FavoriteFragment)
 
-        mAdapter = CustomAdapter(context!!)
+        mAdapter = CustomFavoriteAdapter(context!!,object :CustomFavoriteAdapter.FavListListener{
+            override fun gotoDetailPage(item: MobileBean) {
+
+            }
+
+            override fun removeFavorite(item: Int) {
+                mFavListPresenter.deleteFavorite(item)
+            }
+
+        })
         _view.favRecyclerView.let {
             it.adapter = mAdapter
 
@@ -105,95 +111,4 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView, SortTypeListe
         }
 
     }
-
-
-
-    inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
-        CustomItemTouchHelperListener {
-
-        var androidList: ArrayList<FavoriteEntity> = arrayListOf()
-
-        fun setData(list: List<FavoriteEntity>) {
-            androidList.clear()
-            androidList.addAll(list)
-            mAdapter.notifyDataSetChanged()
-            Log.d("clearList", androidList.toString())
-        }
-
-        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(androidList, fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
-            return true
-        }
-
-        override fun onItemDismiss(position: Int) {
-            mFavListPresenter.deleteFavorite(androidList[position].mobileID!!)
-            androidList.removeAt(position)
-            notifyItemRemoved(position)
-            Log.d("deletefav", mDataArrayUpdate.toString())
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
-
-            return CustomHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.favorite_list,
-                    parent,
-                    false
-                )
-            )
-        }
-
-        override fun getItemCount(): Int = androidList.size
-
-        override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-
-            val item = androidList[position]
-
-            holder.titleTextView.text = item.name
-            holder.priceTextView.text = item.price.toString()
-            holder.rating.text = "Rating : " + item.rating
-            Glide.with(context).load(item.thumbImageURL).into(holder.youtubeImageView)
-        }
-
-        inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-            val titleTextView: TextView = view.textViewTitle
-            val priceTextView: TextView = view.price
-            val youtubeImageView: ImageView = view.mobileImg
-            val rating: TextView = view.textViewRating
-        }
-    }
-
-    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) :
-        ItemTouchHelper.Callback() {
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-
-            val dragFlags = 0
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return makeMovementFlags(dragFlags, swipeFlags)
-        }
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewHolder.let {
-                listener.onItemDismiss(viewHolder.adapterPosition)
-            }
-        }
-
-    }
-
-    interface CustomItemTouchHelperListener {
-        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
-
-        fun onItemDismiss(position: Int)
-    }
-
 }
