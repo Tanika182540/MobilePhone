@@ -1,22 +1,22 @@
-package com.codemobiles.mymobilephone.presenter
+package com.codemobiles.mymobilephone.favoritefragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.MobileListFragment
+import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mymobilephone.CMWorkerThread
-import com.codemobiles.mymobilephone.SortTypeListener
+import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 
 class FavListPresenter(
     _view: FavListInterface.FavListView,
     private var context: Context,
-    favoriteFragment: FavoriteFragment
-) : FavListInterface.FavListPresenter{
+    private var favoriteFragment: FavoriteFragment
+) : FavListInterface.FavListPresenter {
 
 
     override fun deleteFavorite(id: Int) {
@@ -97,4 +97,18 @@ class FavListPresenter(
             it.openHelper.readableDatabase
         }
     }
+
+    override fun gotoDetailPage(item: MobileBean) {
+        val intent = Intent(context, MobileDetailActivity::class.java)
+
+        intent.putExtra("name", item.name)
+        intent.putExtra("brand", item.brand)
+        intent.putExtra("description", item.description)
+        intent.putExtra("image", item.thumbImageURL)
+        intent.putExtra("id", item.id)
+        intent.putExtra("rating", item.rating)
+        intent.putExtra("price", item.price)
+        this.favoriteFragment.startActivity(intent)
+    }
+
 }

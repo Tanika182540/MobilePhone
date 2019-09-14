@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone.presenter
+package com.codemobiles.mymobilephone.favoritefragment
 
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
@@ -18,6 +18,6 @@ interface FavListInterface {
         fun setUpWorkerThread()
         fun setupDatabase()
         fun deleteFavorite(id: Int)
-
+        fun gotoDetailPage(item: MobileBean)
     }
 }

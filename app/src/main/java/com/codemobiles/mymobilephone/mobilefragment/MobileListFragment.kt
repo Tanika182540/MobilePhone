@@ -12,13 +12,15 @@ import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.*
 import com.codemobiles.mymobilephone.adapter.CustomMobileListAdapter
 import com.codemobiles.mymobilephone.database.MobileEntity
-import com.codemobiles.mymobilephone.presenter.MobileListInterface
-import com.codemobiles.mymobilephone.presenter.MobileListPresenter
+import com.codemobiles.mymobilephone.helper.SortTypeListener
+import com.codemobiles.mymobilephone.mobilefragment.MobileListInterface
+import com.codemobiles.mymobilephone.mobilefragment.MobileListPresenter
 import kotlinx.android.synthetic.main.fragment_mobile_list.*
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.swipeRefresh
 
 
-class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortTypeListener {
+class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
+    SortTypeListener {
     override fun submitSortlist(mobilelist: ArrayList<MobileBean>) {
         mAdapter.setData(mobilelist)
         mAdapter.notifyDataSetChanged()
@@ -63,7 +65,11 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView, SortT
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mMobileListPresenter = MobileListPresenter(this, this@MobileListFragment, context!!)
+        mMobileListPresenter = MobileListPresenter(
+            this,
+            this@MobileListFragment,
+            context!!
+        )
         mAdapter = CustomMobileListAdapter(context!!, object : CustomMobileListAdapter.MobileListListener {
             override fun gotoDetailPage(item: MobileBean) {
                 mMobileListPresenter.gotoDetailPage(item)

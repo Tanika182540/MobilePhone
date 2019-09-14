@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone.presenter
+package com.codemobiles.mymobilephone.mobiledetailactivity
 
 import android.content.Context
 import com.codemobiles.mobilephone.network.ApiInterface

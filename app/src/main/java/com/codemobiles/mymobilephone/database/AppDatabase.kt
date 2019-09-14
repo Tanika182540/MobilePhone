@@ -1,17 +1,14 @@
 package com.codemobiles.mymobilephone.database
 
 import android.content.Context
-import android.os.FileObserver.CREATE
 import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.codemobiles.mymobilephone.DATABASE_NAME
+import com.codemobiles.mymobilephone.helper.DATABASE_NAME
 import com.codemobiles.mymobilephone.converter.Converters
-import okhttp3.internal.Internal.instance
 
 // #step2 [UserEntity::class]
 @Database(entities = [MobileEntity::class,FavoriteEntity::class], version = 1, exportSchema = true)

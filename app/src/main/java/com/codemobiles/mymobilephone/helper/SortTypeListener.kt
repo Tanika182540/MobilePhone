@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone
+package com.codemobiles.mymobilephone.helper
 
 interface SortTypeListener {
 

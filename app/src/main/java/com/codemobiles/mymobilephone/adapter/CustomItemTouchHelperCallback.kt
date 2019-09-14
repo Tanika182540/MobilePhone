@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone
+package com.codemobiles.mymobilephone.adapter
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

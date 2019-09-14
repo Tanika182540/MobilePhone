@@ -1,9 +1,5 @@
-package com.codemobiles.mymobilephone
+package com.codemobiles.mymobilephone.mainactivity
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.tabs.TabLayout
@@ -11,17 +7,8 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentTransaction
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mobilephone.network.ApiInterface
-import com.codemobiles.mymobilephone.presenter.MainInterface
-import com.codemobiles.mymobilephone.presenter.MainPresenter
+import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.ui.main.SectionsPagerAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.IllegalArgumentException
 
 

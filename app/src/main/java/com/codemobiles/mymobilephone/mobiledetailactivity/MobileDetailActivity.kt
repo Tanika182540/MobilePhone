@@ -6,14 +6,15 @@ import android.util.DisplayMetrics
 import android.widget.LinearLayout
 import androidx.viewpager.widget.ViewPager
 import com.codemobiles.mymobilephone.R
-import com.codemobiles.mymobilephone.ViewPagerAdapter
+import com.codemobiles.mymobilephone.adapter.ViewPagerAdapter
 import com.codemobiles.mymobilephone.models.MobileImage
-import com.codemobiles.mymobilephone.presenter.MobileDetailInterface
-import com.codemobiles.mymobilephone.presenter.MobileDetailPresenter
+import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailInterface
+import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailPresenter
 import com.ouattararomuald.slider.ImageSlider
 import kotlinx.android.synthetic.main.activity_mobile_detail.*
 
-class MobileDetailActivity : AppCompatActivity(),MobileDetailInterface.DetailView{
+class MobileDetailActivity : AppCompatActivity(),
+    MobileDetailInterface.DetailView{
 
     private lateinit var viewPager: ViewPager
     private lateinit var viewPagerAapter: ViewPagerAdapter
@@ -22,7 +23,12 @@ class MobileDetailActivity : AppCompatActivity(),MobileDetailInterface.DetailVie
 
     override fun setImage(imageArray: ArrayList<String>) {
 
-            viewPagerAapter = ViewPagerAdapter(this, imageArray, width, height)
+            viewPagerAapter = ViewPagerAdapter(
+                this,
+                imageArray,
+                width,
+                height
+            )
             val params = LinearLayout.LayoutParams(width, height)
             viewPager.setLayoutParams(params)
             viewPager.adapter = viewPagerAapter
@@ -43,7 +49,11 @@ class MobileDetailActivity : AppCompatActivity(),MobileDetailInterface.DetailVie
         width = displayMetrics.widthPixels
         height = (displayMetrics.heightPixels * 35) / 100
 
-        mMobileDetailPresenter = MobileDetailPresenter(this,applicationContext)
+        mMobileDetailPresenter =
+            MobileDetailPresenter(
+                this,
+                applicationContext
+            )
         val name = intent.getStringExtra("name")
         val brand = intent.getStringExtra("brand")
         val description = intent.getStringExtra("description")

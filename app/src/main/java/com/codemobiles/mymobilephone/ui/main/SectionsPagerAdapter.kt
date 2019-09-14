@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.codemobiles.mobilephone.FavoriteFragment
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mymobilephone.R
-import com.codemobiles.mymobilephone.SortTypeListener
+import com.codemobiles.mymobilephone.helper.SortTypeListener
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,

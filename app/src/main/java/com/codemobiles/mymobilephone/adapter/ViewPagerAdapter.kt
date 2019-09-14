@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone
+package com.codemobiles.mymobilephone.adapter
 
 import android.content.Context
 import android.view.View

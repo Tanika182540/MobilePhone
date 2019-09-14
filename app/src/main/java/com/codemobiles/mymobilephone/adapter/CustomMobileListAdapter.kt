@@ -105,5 +105,6 @@ class CustomMobileListAdapter(val context: Context,private val listener: MobileL
         val rating = view.textViewRating!!
         val cardView = view.cardView!!
         val favButton = view.favButton!!
+
     }
 

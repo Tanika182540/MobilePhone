@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mymobilephone.CustomItemTouchHelperListener
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import kotlinx.android.synthetic.main.favorite_list.view.*
@@ -28,6 +26,18 @@ class CustomFavoriteAdapter(val context: Context,private val listener: FavListLi
         holder.titleTextView.text = item.name
         holder.priceTextView.text = item.price.toString()
         holder.rating.text = "Rating : " + item.rating
+        val favoriteItem = MobileBean(
+            item.brand,
+            item.description,
+            item.mobileID,
+            item.name,
+            item.price,
+            item.rating,
+            item.thumbImageURL
+        )
+        holder.layout.setOnClickListener {
+            listener.gotoDetailPage(favoriteItem)
+        }
         Glide.with(context).load(item.thumbImageURL).into(holder.youtubeImageView)
     }
 
@@ -74,10 +84,11 @@ class CustomFavoriteAdapter(val context: Context,private val listener: FavListLi
 
 class CustomFavHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    val titleTextView: TextView = view.textViewTitle
-    val priceTextView: TextView = view.price
-    val youtubeImageView: ImageView = view.mobileImg
-    val rating: TextView = view.textViewRating
+    val titleTextView = view.textViewTitle!!
+    val priceTextView = view.price!!
+    val youtubeImageView = view.mobileImg!!
+    val rating = view.textViewRating!!
+    val layout = view.linearView
 }
 
 

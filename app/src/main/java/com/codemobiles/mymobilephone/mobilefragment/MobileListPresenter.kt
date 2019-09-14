@@ -1,15 +1,16 @@
-package com.codemobiles.mymobilephone.presenter
+package com.codemobiles.mymobilephone.mobilefragment
 
 
 
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mobilephone.network.ApiInterface
-import com.codemobiles.mymobilephone.CMWorkerThread
+import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.google.gson.Gson
@@ -22,7 +23,7 @@ class MobileListPresenter(
     private val _view: MobileListInterface.MobileListView,
     mobileListFragment: MobileListFragment,
     context: Context
-) : MobileListInterface.MobileListPresenter{
+) : MobileListInterface.MobileListPresenter {
 
 
     override fun sortData(sort: String, moblieList:ArrayList<MobileBean>) {
@@ -118,7 +119,6 @@ class MobileListPresenter(
             mDatabaseAdapter?.favoriteDAO()?.deleteFavorite(item.id)
         }
         mCMWorkerThread.postTask(task)
-
         Log.d("SCB_NETWORKremove", mDatabaseAdapter.toString())
     }
 
@@ -128,7 +128,6 @@ class MobileListPresenter(
             val checkId = mDatabaseAdapter?.favoriteDAO()?.queryDuplicateId(item.id)
 
             if (checkId == null){
-//                Toast.makeText(context,"Item not duplicate.",Toast.LENGTH_LONG).show()
                 mDatabaseAdapter!!.favoriteDAO().addFavorite(FavoriteEntity(item.id,
                     item.description,
                     item.thumbImageURL,

@@ -1,4 +1,4 @@
-package com.codemobiles.mymobilephone.presenter
+package com.codemobiles.mymobilephone.mobilefragment
 
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.database.FavoriteEntity
