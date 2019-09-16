@@ -3,14 +3,14 @@ package com.codemobiles.mobilephone
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mymobilephone.*
+import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.CustomFavoriteAdapter
 import com.codemobiles.mymobilephone.adapter.CustomItemTouchHelperCallback
 import com.codemobiles.mymobilephone.database.FavoriteEntity
@@ -18,7 +18,6 @@ import com.codemobiles.mymobilephone.favoritefragment.FavListInterface
 import com.codemobiles.mymobilephone.favoritefragment.FavListPresenter
 import com.codemobiles.mymobilephone.helper.SortTypeListener
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
-import kotlinx.android.synthetic.main.fragment_favorite.view.swipeRefresh
 
 class FavoriteFragment : Fragment(), FavListInterface.FavListView,
     SortTypeListener {

@@ -1,8 +1,6 @@
 package com.codemobiles.mymobilephone.mobilefragment
 
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mymobilephone.database.FavoriteEntity
-import com.codemobiles.mymobilephone.database.MobileEntity
 
 interface MobileListInterface {
     interface MobileListView {

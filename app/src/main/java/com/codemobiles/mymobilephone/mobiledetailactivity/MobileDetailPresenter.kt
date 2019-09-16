@@ -3,7 +3,6 @@ package com.codemobiles.mymobilephone.mobiledetailactivity
 import android.content.Context
 import com.codemobiles.mobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.models.MobileImage
-import com.ouattararomuald.slider.ImageSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

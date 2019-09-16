@@ -1,30 +1,22 @@
 package com.codemobiles.mobilephone
 
 
-import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mymobilephone.*
+import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.CustomMobileListAdapter
 import com.codemobiles.mymobilephone.database.MobileEntity
 import com.codemobiles.mymobilephone.helper.SortTypeListener
 import com.codemobiles.mymobilephone.mobilefragment.MobileListInterface
 import com.codemobiles.mymobilephone.mobilefragment.MobileListPresenter
 import kotlinx.android.synthetic.main.fragment_mobile_list.*
-import kotlinx.android.synthetic.main.fragment_mobile_list.view.swipeRefresh
-import android.widget.LinearLayout
-import android.view.WindowManager
-import android.widget.TextView
-import android.view.Gravity
-import android.widget.ProgressBar
+import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 
 
 class MobileListFragment : Fragment(), MobileListInterface.MobileListView,

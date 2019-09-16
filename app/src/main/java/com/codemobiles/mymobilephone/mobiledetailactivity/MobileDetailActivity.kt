@@ -1,16 +1,14 @@
 package com.codemobiles.mobilephone
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.ViewPagerAdapter
-import com.codemobiles.mymobilephone.models.MobileImage
 import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailInterface
 import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailPresenter
-import com.ouattararomuald.slider.ImageSlider
 import kotlinx.android.synthetic.main.activity_mobile_detail.*
 
 class MobileDetailActivity : AppCompatActivity(),
@@ -54,7 +52,6 @@ class MobileDetailActivity : AppCompatActivity(),
         mMobileDetailPresenter.feedImage(id)
 
     }
-
 
     override fun setImage(imageArray: ArrayList<String>) {
 

@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.helper.PRICE_H_L
 import com.codemobiles.mymobilephone.helper.PRICE_L_H
 import com.codemobiles.mymobilephone.helper.RATING_5_1
 import com.codemobiles.mymobilephone.ui.main.SectionsPagerAdapter
-import java.lang.IllegalArgumentException
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {

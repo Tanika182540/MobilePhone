@@ -8,9 +8,9 @@ import com.codemobiles.mobilephone.MobileDetailActivity
 import com.codemobiles.mobilephone.MobileListFragment
 import com.codemobiles.mobilephone.models.MobileBean
 import com.codemobiles.mobilephone.network.ApiInterface
-import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
+import com.codemobiles.mymobilephone.helper.CMWorkerThread
 import com.codemobiles.mymobilephone.helper.PRICE_H_L
 import com.codemobiles.mymobilephone.helper.PRICE_L_H
 import com.codemobiles.mymobilephone.helper.RATING_5_1

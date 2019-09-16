@@ -7,8 +7,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.codemobiles.mymobilephone.helper.DATABASE_NAME
 import com.codemobiles.mymobilephone.converter.Converters
+import com.codemobiles.mymobilephone.helper.DATABASE_NAME
 
 // #step2 [UserEntity::class]
 @Database(entities = [MobileEntity::class, FavoriteEntity::class], version = 1, exportSchema = true)
