@@ -29,16 +29,6 @@ import android.widget.ProgressBar
 
 class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
     SortTypeListener {
-    override fun submitSortlist(mobilelist: ArrayList<MobileBean>) {
-        mAdapter.setData(mobilelist)
-        mAdapter.notifyDataSetChanged()
-    }
-
-    override fun submitlist(mobilelist: ArrayList<MobileBean>) {
-        mAdapter.setData(mobilelist)
-        mAdapter.notifyDataSetChanged()
-    }
-
 
     lateinit var list: MobileEntity
     lateinit var mAdapter: CustomMobileListAdapter
@@ -52,26 +42,6 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
     ): View? {
 
         return inflater.inflate(R.layout.fragment_mobile_list, container, false)
-    }
-
-    override fun showData() {
-        mAdapter.notifyDataSetChanged()
-    }
-
-
-    override fun hideLoading() {
-        view?.swipeRefresh?.isRefreshing = false
-    }
-
-    override fun favoriteListData(selectedList: List<MobileBean>?) {
-        mAdapter.getFavList(selectedList)
-    }
-
-    override fun updateSortType(sort: String) {
-        mMobileListPresenter.getFavoriteList()
-        mMobileListPresenter.sortData(sort, mMobileArray)
-        mAdapter.notifyDataSetChanged()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,6 +89,35 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
 
     }
 
+    override fun submitlist(mobilelist: ArrayList<MobileBean>) {
+        mAdapter.setData(mobilelist)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun submitSortlist(mobilelist: ArrayList<MobileBean>) {
+        mAdapter.setData(mobilelist)
+        mAdapter.notifyDataSetChanged()
+    }
+
+
+    override fun showData() {
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun hideLoading() {
+        view?.swipeRefresh?.isRefreshing = false
+    }
+
+    override fun favoriteListData(selectedList: List<MobileBean>?) {
+        mAdapter.getFavList(selectedList)
+    }
+
+    override fun updateSortType(sort: String) {
+        mMobileListPresenter.getFavoriteList()
+        mMobileListPresenter.sortData(sort, mMobileArray)
+        mAdapter.notifyDataSetChanged()
+
+    }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)

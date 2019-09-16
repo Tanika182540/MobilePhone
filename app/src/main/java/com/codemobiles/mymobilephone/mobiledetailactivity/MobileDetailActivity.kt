@@ -20,6 +20,41 @@ class MobileDetailActivity : AppCompatActivity(),
     private lateinit var viewPagerAapter: ViewPagerAdapter
     private var width: Int = 0
     private var height: Int = 0
+    lateinit var mMobileDetailPresenter: MobileDetailInterface.MobileDetailPresenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_mobile_detail)
+
+        val displayMetrics = DisplayMetrics()
+        viewPager = findViewById(R.id.view_pager_image)
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        width = displayMetrics.widthPixels
+        height = (displayMetrics.heightPixels * 35) / 100
+
+        mMobileDetailPresenter =
+            MobileDetailPresenter(
+                this,
+                applicationContext
+            )
+
+        val name = intent.getStringExtra("name")
+        val brand = intent.getStringExtra("brand")
+        val description = intent.getStringExtra("description")
+        val id = intent.getIntExtra("id", 0)
+        val price = intent.getDoubleExtra("price", 0.0)
+        val rating = intent.getDoubleExtra("rating", 0.0)
+
+        modeText.text = name
+        brandText.text = brand
+        detailText.text = description
+        textViewRating.text = "rating : " + rating.toString()
+        textViewPrice.text = "price : " + price.toString()
+
+        mMobileDetailPresenter.feedImage(id)
+
+    }
+
 
     override fun setImage(imageArray: ArrayList<String>) {
 
@@ -33,40 +68,6 @@ class MobileDetailActivity : AppCompatActivity(),
         viewPager.setLayoutParams(params)
         viewPager.adapter = viewPagerAapter
         viewPager.setAdapter(viewPagerAapter)
-
-    }
-
-    private var mDataArray: ArrayList<MobileImage> = ArrayList<MobileImage>()
-    lateinit var mMobileDetailPresenter: MobileDetailInterface.MobileDetailPresenter
-    private lateinit var imageSlider: ImageSlider
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mobile_detail)
-
-        viewPager = findViewById(R.id.view_pager_image)
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        width = displayMetrics.widthPixels
-        height = (displayMetrics.heightPixels * 35) / 100
-
-        mMobileDetailPresenter =
-            MobileDetailPresenter(
-                this,
-                applicationContext
-            )
-        val name = intent.getStringExtra("name")
-        val brand = intent.getStringExtra("brand")
-        val description = intent.getStringExtra("description")
-        val id = intent.getIntExtra("id", 0)
-        val price = intent.getDoubleExtra("price", 0.0)
-        val rating = intent.getDoubleExtra("rating", 0.0)
-        modeText.text = name
-        brandText.text = brand
-        detailText.text = description
-        textViewRating.text = "rating : " + rating.toString()
-        textViewPrice.text = "price : " + price.toString()
-
-        mMobileDetailPresenter.feedImage(id)
 
     }
 

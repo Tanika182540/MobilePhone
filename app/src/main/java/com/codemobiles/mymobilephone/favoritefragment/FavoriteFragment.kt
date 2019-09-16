@@ -23,6 +23,11 @@ import kotlinx.android.synthetic.main.fragment_favorite.view.swipeRefresh
 class FavoriteFragment : Fragment(), FavListInterface.FavListView,
     SortTypeListener {
 
+    private var selectedItem: String = "default"
+    lateinit var mAdapter: CustomFavoriteAdapter
+    lateinit var mFavListPresenter: FavListInterface.FavListPresenter
+    lateinit var _view: View
+
     override fun updateSortType(sort: String) {
 
         mFavListPresenter.sortData(sort)
@@ -39,13 +44,6 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView,
 
         Log.d("listfav", selectedList.toString())
     }
-
-    private var selectedItem: String = "default"
-
-    lateinit var mAdapter: CustomFavoriteAdapter
-    lateinit var mFavListPresenter: FavListInterface.FavListPresenter
-
-    lateinit var _view: View
 
     override fun hideLoading() {
         view?.swipeRefresh?.isRefreshing = false

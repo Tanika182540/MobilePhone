@@ -15,7 +15,6 @@ class MobileDetailPresenter(
 
     private var mDataArray: ArrayList<MobileImage> = ArrayList<MobileImage>()
     private var mImageUrl: ArrayList<String> = arrayListOf()
-    private lateinit var imageSlider: ImageSlider
     override fun feedImage(id: Int) {
         val call = ApiInterface.getClient().getMobileImage(id)
 

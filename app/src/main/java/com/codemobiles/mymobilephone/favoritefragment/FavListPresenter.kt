@@ -22,6 +22,10 @@ class FavListPresenter(
 ) : FavListInterface.FavListPresenter {
 
 
+    lateinit var mCMWorkerThread: CMWorkerThread
+    var mDatabaseAdapter: AppDatabase? = null
+    private var view: FavListInterface.FavListView = _view
+
     override fun deleteFavorite(id: Int) {
         val task = Runnable {
             mDatabaseAdapter?.favoriteDAO()?.deleteFavorite(id)
@@ -29,10 +33,6 @@ class FavListPresenter(
         }
         mCMWorkerThread.postTask(task)
     }
-
-    lateinit var mCMWorkerThread: CMWorkerThread
-    var mDatabaseAdapter: AppDatabase? = null
-    private var view: FavListInterface.FavListView = _view
 
 
     override fun feedData(selectedItem: String) {
