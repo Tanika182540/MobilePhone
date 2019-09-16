@@ -35,12 +35,11 @@ class FavListPresenter(
     private var view: FavListInterface.FavListView = _view
 
 
-
     override fun feedData(selectedItem: String) {
         val task = Runnable {
 
             var selectedList: List<FavoriteEntity>? = listOf()
-                selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
 
             view?.getFav(selectedList)
         }
@@ -58,29 +57,27 @@ class FavListPresenter(
 
         val task = Runnable {
 
-            var selectedList: List<FavoriteEntity>? =  mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            var selectedList: List<FavoriteEntity>? =
+                mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             var sortedList: List<FavoriteEntity>? = listOf()
 
             when (selectedItem) {
                 RATING_5_1 -> {
 
                     sortedList = selectedList!!.sortedByDescending { it.rating }
-                    Toast.makeText(context, "Rating 5-1", Toast.LENGTH_SHORT).show()
+
                     Log.d("filter1", selectedList.toString())
                 }
                 PRICE_L_H -> {
-                    sortedList = selectedList!!.sortedBy{ it.price }
-                    Toast.makeText(context, "Price low to high", Toast.LENGTH_SHORT).show()
+                    sortedList = selectedList!!.sortedBy { it.price }
                     Log.d("filter2", selectedList.toString())
                 }
                 PRICE_H_L -> {
                     sortedList = selectedList!!.sortedByDescending { it.price }
-                    Toast.makeText(context, "Price high to low", Toast.LENGTH_SHORT).show()
                     Log.d("filter3", selectedList.toString())
                 }
                 else -> {
                     sortedList = selectedList!!
-                    Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show()
                 }
             }
             view.getFav(sortedList)

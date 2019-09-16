@@ -14,9 +14,9 @@ class MobileDetailPresenter(
 ) : MobileDetailInterface.MobileDetailPresenter {
 
     private var mDataArray: ArrayList<MobileImage> = ArrayList<MobileImage>()
-    private var mImageUrl:ArrayList<String> = arrayListOf()
+    private var mImageUrl: ArrayList<String> = arrayListOf()
     private lateinit var imageSlider: ImageSlider
-    override fun feedImage(id: Int){
+    override fun feedImage(id: Int) {
         val call = ApiInterface.getClient().getMobileImage(id)
 
         call.enqueue(object : Callback<List<MobileImage>> {
@@ -24,16 +24,19 @@ class MobileDetailPresenter(
 
             }
 
-            override fun onResponse(call: Call<List<MobileImage>>, response: Response<List<MobileImage>>) {
-                if(response.isSuccessful){
+            override fun onResponse(
+                call: Call<List<MobileImage>>,
+                response: Response<List<MobileImage>>
+            ) {
+                if (response.isSuccessful) {
                     mDataArray.clear()
                     mDataArray.addAll(response.body()!!)
 
 
                     for (i in 0 until mDataArray.size) {
                         var url = mDataArray[i].url
-                        if (url.contains("http")) {}
-                        else url = "https://$url"
+                        if (url.contains("http")) {
+                        } else url = "https://$url"
                         mImageUrl.add(i, url)
                     }
 
@@ -46,7 +49,6 @@ class MobileDetailPresenter(
         })
 
     }
-
 
 
 }

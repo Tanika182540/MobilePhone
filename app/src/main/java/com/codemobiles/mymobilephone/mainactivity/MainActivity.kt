@@ -3,6 +3,7 @@ package com.codemobiles.mymobilephone.mainactivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             showSortDialog()
         }
 
-        viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(
@@ -50,16 +51,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSortDialog() {
         lateinit var dialog: AlertDialog
-        val array = arrayOf(PRICE_L_H , PRICE_H_L, RATING_5_1)
-
+        val array = arrayOf(PRICE_L_H, PRICE_H_L, RATING_5_1)
         val builder = AlertDialog.Builder(this)
 
         builder.setSingleChoiceItems(array, -1) { _, which ->
-           val  selectedItem = array[which]
+            val selectedItem = array[which]
 
             try {
                 sectionsPagerAdapter.updateSort(selectedItem)
-
+                Toast.makeText(this, selectedItem, Toast.LENGTH_SHORT).show()
                 Log.d("selected", selectedItem)
 
             } catch (e: IllegalArgumentException) {
@@ -72,11 +72,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadingDialog() {
         val builder = android.app.AlertDialog.Builder(this)
-        val dialogView = layoutInflater.inflate(R.layout.progress_dialog,null)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
         builder.setView(dialogView)
         builder.setCancelable(false)
         val dialog = builder.create()
         dialog.show()
-        Handler().postDelayed({dialog.dismiss()},1000)
+        Handler().postDelayed({ dialog.dismiss() }, 1000)
     }
 }

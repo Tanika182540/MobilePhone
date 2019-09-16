@@ -14,7 +14,7 @@ import com.ouattararomuald.slider.ImageSlider
 import kotlinx.android.synthetic.main.activity_mobile_detail.*
 
 class MobileDetailActivity : AppCompatActivity(),
-    MobileDetailInterface.DetailView{
+    MobileDetailInterface.DetailView {
 
     private lateinit var viewPager: ViewPager
     private lateinit var viewPagerAapter: ViewPagerAdapter
@@ -23,16 +23,16 @@ class MobileDetailActivity : AppCompatActivity(),
 
     override fun setImage(imageArray: ArrayList<String>) {
 
-            viewPagerAapter = ViewPagerAdapter(
-                this,
-                imageArray,
-                width,
-                height
-            )
-            val params = LinearLayout.LayoutParams(width, height)
-            viewPager.setLayoutParams(params)
-            viewPager.adapter = viewPagerAapter
-            viewPager.setAdapter(viewPagerAapter)
+        viewPagerAapter = ViewPagerAdapter(
+            this,
+            imageArray,
+            width,
+            height
+        )
+        val params = LinearLayout.LayoutParams(width, height)
+        viewPager.setLayoutParams(params)
+        viewPager.adapter = viewPagerAapter
+        viewPager.setAdapter(viewPagerAapter)
 
     }
 
@@ -58,8 +58,8 @@ class MobileDetailActivity : AppCompatActivity(),
         val brand = intent.getStringExtra("brand")
         val description = intent.getStringExtra("description")
         val id = intent.getIntExtra("id", 0)
-        val price = intent.getDoubleExtra("price",0.0)
-        val rating = intent.getDoubleExtra("rating",0.0)
+        val price = intent.getDoubleExtra("price", 0.0)
+        val rating = intent.getDoubleExtra("rating", 0.0)
         modeText.text = name
         brandText.text = brand
         detailText.text = description
@@ -69,9 +69,6 @@ class MobileDetailActivity : AppCompatActivity(),
         mMobileDetailPresenter.feedImage(id)
 
     }
-
-
-
 
 
 }

@@ -27,8 +27,6 @@ import android.view.Gravity
 import android.widget.ProgressBar
 
 
-
-
 class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
     SortTypeListener {
     override fun submitSortlist(mobilelist: ArrayList<MobileBean>) {
@@ -55,6 +53,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
 
         return inflater.inflate(R.layout.fragment_mobile_list, container, false)
     }
+
     override fun showData() {
         mAdapter.notifyDataSetChanged()
     }
@@ -63,13 +62,14 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
     override fun hideLoading() {
         view?.swipeRefresh?.isRefreshing = false
     }
+
     override fun favoriteListData(selectedList: List<MobileBean>?) {
         mAdapter.getFavList(selectedList)
     }
 
     override fun updateSortType(sort: String) {
         mMobileListPresenter.getFavoriteList()
-        mMobileListPresenter.sortData(sort,mMobileArray)
+        mMobileListPresenter.sortData(sort, mMobileArray)
         mAdapter.notifyDataSetChanged()
 
     }
@@ -80,23 +80,24 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
             this@MobileListFragment,
             context!!
         )
-        mAdapter = CustomMobileListAdapter(context!!, object : CustomMobileListAdapter.MobileListListener {
-            override fun gotoDetailPage(item: MobileBean) {
-                mMobileListPresenter.gotoDetailPage(item)
-            }
+        mAdapter =
+            CustomMobileListAdapter(context!!, object : CustomMobileListAdapter.MobileListListener {
+                override fun gotoDetailPage(item: MobileBean) {
+                    mMobileListPresenter.gotoDetailPage(item)
+                }
 
-            override fun addToFavorite(item: MobileBean) {
+                override fun addToFavorite(item: MobileBean) {
 
-                Log.d("favItem","add " +  item.name)
-                mMobileListPresenter.addToFavorite(item)
-            }
+                    Log.d("favItem", "add " + item.name)
+                    mMobileListPresenter.addToFavorite(item)
+                }
 
-            override fun removeFavorite(item: MobileBean) {
-                Log.d("favItem","remove " + item.name)
-                mMobileListPresenter.removeFavorite(item)
-            }
+                override fun removeFavorite(item: MobileBean) {
+                    Log.d("favItem", "remove " + item.name)
+                    mMobileListPresenter.removeFavorite(item)
+                }
 
-        })
+            })
         recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
@@ -117,7 +118,6 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
         mMobileListPresenter.feedData("default")
 
     }
-
 
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

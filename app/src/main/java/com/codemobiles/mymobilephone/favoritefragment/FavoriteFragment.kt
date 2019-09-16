@@ -67,7 +67,7 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView,
             this@FavoriteFragment
         )
 
-        mAdapter = CustomFavoriteAdapter(context!!,object :CustomFavoriteAdapter.FavListListener{
+        mAdapter = CustomFavoriteAdapter(context!!, object : CustomFavoriteAdapter.FavListListener {
             override fun gotoDetailPage(item: MobileBean) {
                 mFavListPresenter.gotoDetailPage(item)
             }
@@ -91,8 +91,6 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView,
             mFavListPresenter.feedData("default")
 
         }
-
-
 
         _view.swipeRefresh.setOnRefreshListener {
             mFavListPresenter.sortData(selectedItem)

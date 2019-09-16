@@ -22,7 +22,7 @@ interface MobileListInterface {
         fun setUpWorkerThread()
         fun setupDatabase()
         fun getFavoriteList()
-        fun sendTask(task:Runnable)
-        fun sortData(sort:String,moblieList:ArrayList<MobileBean>)
+        fun sendTask(task: Runnable)
+        fun sortData(sort: String, moblieList: ArrayList<MobileBean>)
     }
 }

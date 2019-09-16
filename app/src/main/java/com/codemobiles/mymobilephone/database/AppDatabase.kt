@@ -11,12 +11,12 @@ import com.codemobiles.mymobilephone.helper.DATABASE_NAME
 import com.codemobiles.mymobilephone.converter.Converters
 
 // #step2 [UserEntity::class]
-@Database(entities = [MobileEntity::class,FavoriteEntity::class], version = 1, exportSchema = true)
+@Database(entities = [MobileEntity::class, FavoriteEntity::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun mobileDao(): MobileDAO // #step3
-    abstract fun favoriteDAO():favoriteDAO
+    abstract fun favoriteDAO(): favoriteDAO
 
     companion object {
 
@@ -64,7 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
             instance = null
         }
 
-        }
-
-
     }
+
+
+}
