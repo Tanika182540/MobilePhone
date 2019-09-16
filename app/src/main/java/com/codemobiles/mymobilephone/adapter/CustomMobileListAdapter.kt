@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.R
 import kotlinx.android.synthetic.main.custom_list.view.*
 
 class CustomMobileListAdapter(val context: Context,private val listener: MobileListListener) : RecyclerView.Adapter<CustomMobileListHolder>() {
 
-    var mMobileArray:ArrayList<MobileBean>? = arrayListOf()
-    var favButtonList: List<MobileBean>? = listOf()
+    private var mMobileArray:ArrayList<MobileBean>? = arrayListOf()
+    private var favButtonList: List<MobileBean>? = listOf()
 
     fun getFavList(selectedList: List<MobileBean>?) {
         favButtonList = listOf()
@@ -69,7 +69,7 @@ class CustomMobileListAdapter(val context: Context,private val listener: MobileL
             if (favButtonList?.isNotEmpty()!!){
 
                 for (i in 0 until favButtonList!!.size){
-                    if (favoriteItem.name.contentEquals(favButtonList!!.get(i).name)){
+                    if (favoriteItem.name.contentEquals(favButtonList!![i].name)){
                         holder.favButton.isChecked = true
                     }
 
@@ -79,7 +79,7 @@ class CustomMobileListAdapter(val context: Context,private val listener: MobileL
             holder.subtitleTextView.text = item.description
             holder.price.text = "Price : $ " + item.price
             holder.rating.text = "Rating : " + item.rating
-            Glide.with(context!!).load(item.thumbImageURL).into(holder.youtubeImageView)
+            Glide.with(context).load(item.thumbImageURL).into(holder.youtubeImageView)
             holder.favButton.text = null
             holder.favButton.textOn = null
             holder.favButton.textOff = null

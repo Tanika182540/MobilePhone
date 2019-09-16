@@ -1,4 +1,4 @@
-package com.codemobiles.mobilephone
+package com.codemobiles.mymobilephone.favoritefragment
 
 
 import android.os.Bundle
@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.CustomFavoriteAdapter
 import com.codemobiles.mymobilephone.adapter.CustomItemTouchHelperCallback
 import com.codemobiles.mymobilephone.database.FavoriteEntity
-import com.codemobiles.mymobilephone.favoritefragment.FavListInterface
-import com.codemobiles.mymobilephone.favoritefragment.FavListPresenter
 import com.codemobiles.mymobilephone.helper.SortTypeListener
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 
@@ -23,9 +21,9 @@ class FavoriteFragment : Fragment(), FavListInterface.FavListView,
     SortTypeListener {
 
     private var selectedItem: String = "default"
-    lateinit var mAdapter: CustomFavoriteAdapter
+    private lateinit var mAdapter: CustomFavoriteAdapter
     lateinit var mFavListPresenter: FavListInterface.FavListPresenter
-    lateinit var _view: View
+    private lateinit var _view: View
 
     override fun updateSortType(sort: String) {
 

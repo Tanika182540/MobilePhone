@@ -1,6 +1,6 @@
 package com.codemobiles.mymobilephone.favoritefragment
 
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 
 interface FavListInterface {

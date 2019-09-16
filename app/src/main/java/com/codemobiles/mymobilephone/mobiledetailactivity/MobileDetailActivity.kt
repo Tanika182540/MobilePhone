@@ -1,4 +1,4 @@
-package com.codemobiles.mobilephone
+package com.codemobiles.mymobilephone.mobiledetailactivity
 
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.ViewPagerAdapter
-import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailInterface
-import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailPresenter
 import kotlinx.android.synthetic.main.activity_mobile_detail.*
 
 class MobileDetailActivity : AppCompatActivity(),
@@ -18,7 +16,7 @@ class MobileDetailActivity : AppCompatActivity(),
     private lateinit var viewPagerAapter: ViewPagerAdapter
     private var width: Int = 0
     private var height: Int = 0
-    lateinit var mMobileDetailPresenter: MobileDetailInterface.MobileDetailPresenter
+    private lateinit var mMobileDetailPresenter: MobileDetailInterface.MobileDetailPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +44,8 @@ class MobileDetailActivity : AppCompatActivity(),
         modeText.text = name
         brandText.text = brand
         detailText.text = description
-        textViewRating.text = "rating : " + rating.toString()
-        textViewPrice.text = "price : " + price.toString()
+        textViewRating.text = "rating : $rating"
+        textViewPrice.text = "price : $price"
 
         mMobileDetailPresenter.feedImage(id)
 
@@ -64,7 +62,7 @@ class MobileDetailActivity : AppCompatActivity(),
         val params = LinearLayout.LayoutParams(width, height)
         viewPager.setLayoutParams(params)
         viewPager.adapter = viewPagerAapter
-        viewPager.setAdapter(viewPagerAapter)
+        viewPager.adapter = viewPagerAapter
 
     }
 

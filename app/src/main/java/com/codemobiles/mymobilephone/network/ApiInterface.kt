@@ -1,7 +1,7 @@
-package com.codemobiles.mobilephone.network;
+package com.codemobiles.mymobilephone.network
 
 
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.models.MobileImage
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -18,7 +18,7 @@ interface ApiInterface {
     fun getMobileImage(@Path("id") id: Int): Call<List<MobileImage>>
 
     companion object Factory {
-        private val BASE_URL = "http://scb-test-mobile.herokuapp.com/"
+        private const val BASE_URL = "http://scb-test-mobile.herokuapp.com/"
 
         private var retrofit: Retrofit? = null
 

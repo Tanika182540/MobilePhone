@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.MobileListFragment
+import com.codemobiles.mymobilephone.favoritefragment.FavoriteFragment
+import com.codemobiles.mymobilephone.mobilefragment.MobileListFragment
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.helper.SortTypeListener
 
@@ -18,7 +18,7 @@ private val TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context,val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: Context, private val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     fun updateSort(sort: String) {
         fm.fragments.forEach {

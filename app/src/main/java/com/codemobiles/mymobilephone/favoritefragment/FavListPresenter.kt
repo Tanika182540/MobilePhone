@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
-import com.codemobiles.mobilephone.FavoriteFragment
-import com.codemobiles.mobilephone.MobileDetailActivity
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailActivity
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.helper.CMWorkerThread
@@ -22,14 +21,14 @@ class FavListPresenter(
 ) : FavListInterface.FavListPresenter {
 
 
-    lateinit var mCMWorkerThread: CMWorkerThread
-    var mDatabaseAdapter: AppDatabase? = null
+    private lateinit var mCMWorkerThread: CMWorkerThread
+    private var mDatabaseAdapter: AppDatabase? = null
     private var view: FavListInterface.FavListView = _view
 
     override fun deleteFavorite(id: Int) {
         val task = Runnable {
             mDatabaseAdapter?.favoriteDAO()?.deleteFavorite(id)
-            Toast.makeText(context, "delete!" + id, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "delete!$id", Toast.LENGTH_SHORT).show()
         }
         mCMWorkerThread.postTask(task)
     }
@@ -41,13 +40,13 @@ class FavListPresenter(
             var selectedList: List<FavoriteEntity>? = listOf()
             selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
 
-            view?.getFav(selectedList)
+            view.getFav(selectedList)
         }
         mCMWorkerThread.postTask(task)
 
         Handler().postDelayed({
             //todo
-            view?.hideLoading()
+            view.hideLoading()
         }, 3000)
 
     }
@@ -57,7 +56,7 @@ class FavListPresenter(
 
         val task = Runnable {
 
-            var selectedList: List<FavoriteEntity>? =
+            val selectedList: List<FavoriteEntity>? =
                 mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             var sortedList: List<FavoriteEntity>? = listOf()
 

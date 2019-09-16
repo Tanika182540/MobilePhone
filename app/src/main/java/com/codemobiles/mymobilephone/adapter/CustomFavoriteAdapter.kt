@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import kotlinx.android.synthetic.main.favorite_list.view.*
@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 class CustomFavoriteAdapter(val context: Context,private val listener: FavListListener) : RecyclerView.Adapter<CustomFavHolder>(),
     CustomItemTouchHelperListener {
 
-    var mDataArrayUpdate: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private var mDataArrayUpdate: ArrayList<MobileBean> = arrayListOf()
     override fun onBindViewHolder(holder: CustomFavHolder, position: Int) {
         val item = androidList[position]
 
@@ -40,7 +40,7 @@ class CustomFavoriteAdapter(val context: Context,private val listener: FavListLi
     }
 
 
-    var androidList: ArrayList<FavoriteEntity> = arrayListOf()
+    private var androidList: ArrayList<FavoriteEntity> = arrayListOf()
 
         fun setData(list: List<FavoriteEntity>) {
             androidList.clear()
@@ -56,7 +56,7 @@ class CustomFavoriteAdapter(val context: Context,private val listener: FavListLi
         }
 
         override fun onItemDismiss(position: Int) {
-            listener.removeFavorite(androidList[position].mobileID!!)
+            listener.removeFavorite(androidList[position].mobileID)
             androidList.removeAt(position)
             notifyItemRemoved(position)
             Log.d("deletefav", mDataArrayUpdate.toString())
@@ -86,7 +86,7 @@ class CustomFavHolder(view: View) : RecyclerView.ViewHolder(view) {
     val priceTextView = view.price!!
     val youtubeImageView = view.mobileImg!!
     val rating = view.textViewRating!!
-    val layout = view.linearView
+    val layout = view.linearView!!
 }
 
 

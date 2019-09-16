@@ -1,7 +1,7 @@
 package com.codemobiles.mymobilephone.mobiledetailactivity
 
 import android.content.Context
-import com.codemobiles.mobilephone.network.ApiInterface
+import com.codemobiles.mymobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.models.MobileImage
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,7 +12,7 @@ class MobileDetailPresenter(
     private var applicationContext: Context
 ) : MobileDetailInterface.MobileDetailPresenter {
 
-    private var mDataArray: ArrayList<MobileImage> = ArrayList<MobileImage>()
+    private var mDataArray: ArrayList<MobileImage> = arrayListOf()
     private var mImageUrl: ArrayList<String> = arrayListOf()
     override fun feedImage(id: Int) {
         val call = ApiInterface.getClient().getMobileImage(id)

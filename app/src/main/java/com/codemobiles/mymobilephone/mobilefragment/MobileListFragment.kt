@@ -1,4 +1,4 @@
-package com.codemobiles.mobilephone
+package com.codemobiles.mymobilephone.mobilefragment
 
 
 import android.os.Bundle
@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.codemobiles.mobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.models.MobileBean
 import com.codemobiles.mymobilephone.R
 import com.codemobiles.mymobilephone.adapter.CustomMobileListAdapter
 import com.codemobiles.mymobilephone.database.MobileEntity
 import com.codemobiles.mymobilephone.helper.SortTypeListener
-import com.codemobiles.mymobilephone.mobilefragment.MobileListInterface
-import com.codemobiles.mymobilephone.mobilefragment.MobileListPresenter
 import kotlinx.android.synthetic.main.fragment_mobile_list.*
 import kotlinx.android.synthetic.main.fragment_mobile_list.view.*
 
@@ -23,10 +21,9 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
     SortTypeListener {
 
     lateinit var list: MobileEntity
-    lateinit var mAdapter: CustomMobileListAdapter
-    var favButtonList: List<MobileBean>? = listOf()
+    private lateinit var mAdapter: CustomMobileListAdapter
     lateinit var mMobileListPresenter: MobileListInterface.MobileListPresenter
-    var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private var mMobileArray: ArrayList<MobileBean> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

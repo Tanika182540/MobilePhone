@@ -4,10 +4,9 @@ package com.codemobiles.mymobilephone.mobilefragment
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.codemobiles.mobilephone.MobileDetailActivity
-import com.codemobiles.mobilephone.MobileListFragment
-import com.codemobiles.mobilephone.models.MobileBean
-import com.codemobiles.mobilephone.network.ApiInterface
+import com.codemobiles.mymobilephone.mobiledetailactivity.MobileDetailActivity
+import com.codemobiles.mymobilephone.models.MobileBean
+import com.codemobiles.mymobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.database.AppDatabase
 import com.codemobiles.mymobilephone.database.FavoriteEntity
 import com.codemobiles.mymobilephone.helper.CMWorkerThread
@@ -23,18 +22,17 @@ import retrofit2.Response
 class MobileListPresenter(
     private val _view: MobileListInterface.MobileListView,
     mobileListFragment: MobileListFragment,
-    context: Context
+    private val context: Context
 ) : MobileListInterface.MobileListPresenter {
 
-    val context: Context = context
-    val mobileListFragment: MobileListFragment = mobileListFragment
-    lateinit var mCMWorkerThread: CMWorkerThread
-    var mDatabaseAdapter: AppDatabase? = null
-    var mDataArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
-    var mMobileArray: ArrayList<MobileBean> = ArrayList<MobileBean>()
+    private val mobileListFragment: MobileListFragment = mobileListFragment
+    private lateinit var mCMWorkerThread: CMWorkerThread
+    private var mDatabaseAdapter: AppDatabase? = null
+    var mDataArray: ArrayList<MobileBean> = arrayListOf()
+    private var mMobileArray: ArrayList<MobileBean> = arrayListOf()
 
     override fun sortData(sort: String, moblieList: ArrayList<MobileBean>) {
-        var sortedMobile: ArrayList<MobileBean> = ArrayList<MobileBean>()
+        val sortedMobile: ArrayList<MobileBean> = arrayListOf()
 
         mMobileArray.clear()
         if (mDataArray.isEmpty()) {
@@ -44,7 +42,7 @@ class MobileListPresenter(
         when (sort) {
 
             RATING_5_1 -> {
-                sortedMobile.addAll(mDataArray.sortedByDescending({ it.rating }))
+                sortedMobile.addAll(mDataArray.sortedByDescending { it.rating })
                 Log.d("checkId!", sortedMobile.size.toString())
 
             }
@@ -74,12 +72,12 @@ class MobileListPresenter(
     override fun getFavoriteList() {
         val task = Runnable {
 
-            var selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
+            val selectedList = mDatabaseAdapter?.favoriteDAO()?.queryFavMobile()
             val gson = Gson()
             val json = gson.toJson(selectedList)
             val dataList = gson.fromJson<List<MobileBean>>(json,
                 object : TypeToken<List<MobileBean>>() {}.type)
-            _view?.favoriteListData(dataList)
+            _view.favoriteListData(dataList)
             Log.d("fromFavDB", "fav " + selectedList.toString())
         }
         mCMWorkerThread.postTask(task)

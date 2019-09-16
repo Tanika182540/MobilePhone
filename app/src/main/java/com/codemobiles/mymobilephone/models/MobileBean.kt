@@ -1,4 +1,4 @@
-package com.codemobiles.mobilephone.models
+package com.codemobiles.mymobilephone.models
 
 
 data class MobileBean(
