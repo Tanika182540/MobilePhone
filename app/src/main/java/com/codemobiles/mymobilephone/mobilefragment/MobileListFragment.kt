@@ -39,7 +39,7 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
             this@MobileListFragment,
             context!!
         )
-        mAdapter =
+        this.mAdapter =
             CustomMobileListAdapter(context!!, object : CustomMobileListAdapter.MobileListListener {
                 override fun gotoDetailPage(item: MobileBean) {
                     mMobileListPresenter.gotoDetailPage(item)
@@ -70,11 +70,14 @@ class MobileListFragment : Fragment(), MobileListInterface.MobileListView,
             hideLoading()
 
         }
-        mMobileListPresenter.setUpWorkerThread()
-        mMobileListPresenter.setupDatabase()
-        mMobileArray.clear()
-        mMobileListPresenter.getFavoriteList()
-        mMobileListPresenter.feedData("default")
+
+        mMobileListPresenter.let {
+            mMobileArray.clear()
+            it.setUpWorkerThread()
+            it.setupDatabase()
+            it.getFavoriteList()
+            it.feedData("default")
+        }
 
     }
 

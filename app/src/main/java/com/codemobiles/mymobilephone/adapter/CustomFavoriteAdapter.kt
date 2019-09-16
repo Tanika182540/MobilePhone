@@ -1,5 +1,6 @@
 package com.codemobiles.mymobilephone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ class CustomFavoriteAdapter(val context: Context,private val listener: FavListLi
     CustomItemTouchHelperListener {
 
     private var mDataArrayUpdate: ArrayList<MobileBean> = arrayListOf()
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CustomFavHolder, position: Int) {
         val item = androidList[position]
 

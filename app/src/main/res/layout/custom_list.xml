@@ -35,7 +35,7 @@
 
             <TextView
                     android:id="@+id/textViewTitle"
-                    android:text="Title"
+                    android:text="@string/title"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
 
         <TextView
                 android:id="@+id/textViewSubTitle"
-                android:text="Sub title"
+                android:text="@string/sub_title"
                 android:lines="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -66,7 +66,7 @@
                     android:id="@+id/textViewPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price : $ "
+                    android:text="@string/pricemobile"
                     android:layout_alignParentLeft="true"
                     />
 
@@ -74,7 +74,7 @@
                     android:paddingLeft="110dp"
                     android:layout_alignParentRight="true"
                     android:id="@+id/textViewRating"
-                    android:text="Rating : "
+                    android:text="@string/ratingmobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

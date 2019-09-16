@@ -21,11 +21,10 @@ import retrofit2.Response
 
 class MobileListPresenter(
     private val _view: MobileListInterface.MobileListView,
-    mobileListFragment: MobileListFragment,
+    private val mobileListFragment: MobileListFragment,
     private val context: Context
 ) : MobileListInterface.MobileListPresenter {
 
-    private val mobileListFragment: MobileListFragment = mobileListFragment
     private lateinit var mCMWorkerThread: CMWorkerThread
     private var mDatabaseAdapter: AppDatabase? = null
     var mDataArray: ArrayList<MobileBean> = arrayListOf()

@@ -34,14 +34,14 @@
                         android:textSize="16sp"
                         android:layout_alignParentLeft="true"
                         android:id="@+id/textViewRating"
-                        android:text="price"
+                        android:text="@string/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 <TextView
                         android:textSize="16sp"
                         android:layout_alignParentRight="true"
                         android:id="@+id/textViewPrice"
-                        android:text="price"
+                        android:text="@string/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -61,7 +61,7 @@
                         android:textColor="#000000"
                         android:textSize="22sp"
                         android:textStyle="bold"
-                        android:text="Title"
+                        android:text="@string/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -69,7 +69,7 @@
                         android:id="@+id/brandText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="brand"
+                        android:text="@string/brand"
                         android:layout_marginLeft="10dp"
                 />
 
@@ -81,7 +81,7 @@
                     android:id="@+id/detailText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="detail"
+                    android:text="@string/detail"
             />
         </RelativeLayout>
     </ScrollView>

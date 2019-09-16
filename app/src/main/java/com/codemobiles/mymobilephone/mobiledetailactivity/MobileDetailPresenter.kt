@@ -1,6 +1,5 @@
 package com.codemobiles.mymobilephone.mobiledetailactivity
 
-import android.content.Context
 import com.codemobiles.mymobilephone.network.ApiInterface
 import com.codemobiles.mymobilephone.models.MobileImage
 import retrofit2.Call
@@ -8,8 +7,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MobileDetailPresenter(
-    private var _view: MobileDetailInterface.DetailView,
-    private var applicationContext: Context
+    private var _view: MobileDetailInterface.DetailView
 ) : MobileDetailInterface.MobileDetailPresenter {
 
     private var mDataArray: ArrayList<MobileImage> = arrayListOf()
@@ -29,7 +27,6 @@ class MobileDetailPresenter(
                 if (response.isSuccessful) {
                     mDataArray.clear()
                     mDataArray.addAll(response.body()!!)
-
 
                     for (i in 0 until mDataArray.size) {
                         var url = mDataArray[i].url

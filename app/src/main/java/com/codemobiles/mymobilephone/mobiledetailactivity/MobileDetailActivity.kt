@@ -1,5 +1,6 @@
 package com.codemobiles.mymobilephone.mobiledetailactivity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
@@ -18,6 +19,7 @@ class MobileDetailActivity : AppCompatActivity(),
     private var height: Int = 0
     private lateinit var mMobileDetailPresenter: MobileDetailInterface.MobileDetailPresenter
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mobile_detail)
@@ -27,12 +29,7 @@ class MobileDetailActivity : AppCompatActivity(),
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         width = displayMetrics.widthPixels
         height = (displayMetrics.heightPixels * 35) / 100
-
-        mMobileDetailPresenter =
-            MobileDetailPresenter(
-                this,
-                applicationContext
-            )
+        mMobileDetailPresenter = MobileDetailPresenter(this)
 
         val name = intent.getStringExtra("name")
         val brand = intent.getStringExtra("brand")
@@ -60,7 +57,7 @@ class MobileDetailActivity : AppCompatActivity(),
             height
         )
         val params = LinearLayout.LayoutParams(width, height)
-        viewPager.setLayoutParams(params)
+        viewPager.layoutParams = params
         viewPager.adapter = viewPagerAapter
         viewPager.adapter = viewPagerAapter
 

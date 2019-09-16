@@ -13,10 +13,10 @@
             android:layout_margin="16dp"/>
 
         <TextView
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:gravity="center_horizontal"
                 android:textStyle="bold"
-                android:text="Loading. . ."
+                android:text="@string/loading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 </LinearLayout>
